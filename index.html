@@ -1,102 +1,168 @@
+                  </html>
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Cartazista - Cartaz Fácil Clone</title>
+    <title>Painel Cartazista Pro - Cartaz Fácil</title>
+    <script src="https://cloudflare.com"></script>
     <style>
-        /* CSS RESET E ESTRUTURA BASE (Estilo SaaS / Cartaz Fácil) */
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        /* CONFIGURAÇÕES DO PAINEL LATERAL (SaaS) */
+        * { box-sizing: border-box; font-family: 'Arial Black', Gadget, sans-serif; }
         body { margin: 0; background-color: #1e1e2f; color: #fff; display: flex; height: 100vh; overflow: hidden; }
+        @media (max-width: 768px) { body { flex-direction: column; overflow: auto; height: auto; } }
         
-        /* Layout em Duas Colunas */
-        .sidebar { width: 380px; background-color: #26263f; padding: 20px; overflow-y: auto; box-shadow: 4px 0 10px rgba(0,0,0,0.3); z-index: 10; }
-        .main-content { flex: 1; background-color: #13131f; display: flex; align-items: center; justify-content: center; padding: 20px; overflow: auto; }
+        .sidebar { width: 380px; background-color: #26263f; padding: 20px; overflow-y: auto; box-shadow: 4px 0 10px rgba(0,0,0,0.3); z-index: 10; font-family: system-ui, sans-serif; }
+        @media (max-width: 768px) { .sidebar { width: 100%; height: auto; overflow: visible; } }
         
-        /* Elementos de Formulário */
-        h2 { font-size: 20px; margin-top: 0; color: #00ffcc; border-bottom: 2px solid #3d3d5c; padding-bottom: 10px; }
+        .main-content { flex: 1; background-color: #13131f; display: flex; align-items: center; justify-content: center; padding: 20px; overflow: auto; min-height: 100vh; }
+        
+        h2 { font-size: 20px; margin-top: 0; color: #00ffcc; border-bottom: 2px solid #3d3d5c; padding-bottom: 10px; font-family: system-ui, sans-serif; }
         .group { margin-bottom: 15px; }
-        label { display: block; font-size: 13px; color: #a2a2c2; margin-bottom: 5px; font-weight: 600; }
-        input, select { width: 100%; padding: 10px; background-color: #31314f; border: 1px solid #4e4e75; border-radius: 6px; color: #fff; font-size: 15px; outline: none; }
+        label { display: block; font-size: 13px; color: #a2a2c2; margin-bottom: 5px; font-weight: 600; font-family: system-ui, sans-serif; }
+        input, select { width: 100%; padding: 10px; background-color: #31314f; border: 1px solid #4e4e75; border-radius: 6px; color: #fff; font-size: 15px; outline: none; font-family: system-ui, sans-serif; }
         input:focus, select:focus { border-color: #00ffcc; }
         .row { display: flex; gap: 10px; }
         
-        /* Botão de Impressão Estilo Profissional */
         .btn-print { background: linear-gradient(135deg, #00ffcc, #00b3ff); color: #13131f; font-weight: bold; border: none; padding: 14px; border-radius: 6px; cursor: pointer; font-size: 16px; width: 100%; transition: 0.2s; margin-top: 15px; text-transform: uppercase; }
-        .btn-print:hover { transform: scale(1.02); box-shadow: 0 0 15px rgba(0,255,204,0.4); }
+        .btn-save { background: linear-gradient(135deg, #ffcc00, #ffaa00); color: #13131f; font-weight: bold; border: none; padding: 14px; border-radius: 6px; cursor: pointer; font-size: 16px; width: 100%; transition: 0.2s; margin-top: 10px; text-transform: uppercase; }
 
-        /* QUADRO DE VISUALIZAÇÃO DO PAPEL */
-        .paper-preview { background-color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform-origin: center; display: block; }
+        /* PREVISÃO DA FOLHA */
+        .paper-preview { background-color: #fff; display: block; }
         
-        /* DIMENSÕES REAIS DE IMPRESSÃO */
+        /* TAMANHOS DE PAPEL */
         .A4 { width: 210mm; height: 297mm; }
         .A5 { width: 148mm; height: 210mm; }
         .tam-11x15 { width: 110mm; height: 150mm; }
         .tam-20x27 { width: 200mm; height: 270mm; }
 
-        /* GRID PARA 4 CARTAZES EM 1 FOLHA A4 */
+        /* MODO MULTI-CARTAZ 4 POR FOLHA */
         .grid-4 { width: 210mm; height: 297mm; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; background: #fff; }
-        .grid-4 .cartaz-container { width: 100% !important; height: 100% !important; border: 3px dashed #ccc; page-break-inside: avoid; }
+        .grid-4 .cartaz-container { width: 100% !important; height: 100% !important; border: 4px solid #e60000; page-break-inside: avoid; }
         
-        /* DESIGN INTERNO DO CARTAZ (IGUAL SUPERMERCADO) */
-        .cartaz-container { width: 100%; height: 100%; background-color: #fff; color: #000; display: flex; flex-direction: column; justify-content: space-between; padding: 25px; box-sizing: border-box; position: relative; overflow: hidden; }
+        /* ESTRUTURA DO CARTAZ (DIVISÃO 50/50 E BORDAS DO TEMA) */
+        .cartaz-container { 
+            width: 100%; 
+            height: 100%; 
+            background-color: #fff; 
+            color: #000; 
+            display: flex; 
+            flex-direction: column; 
+            padding: 15px; 
+            box-sizing: border-box; 
+            position: relative; 
+            overflow: hidden;
+            border: 18px solid #e60000; /* Borda externa principal */
+        }
         
-        /* MODELO 1: PADRÃO OFERTA */
-        .badge-topo { width: 100%; text-align: center; background-color: #e60000; color: #fff; font-size: 55px; font-weight: 900; padding: 10px 0; text-transform: uppercase; letter-spacing: 3px; border-radius: 8px; clip-path: polygon(0% 0%, 100% 0%, 95% 100%, 50% 85%, 5% 100%); }
-        
-        /* MODELO 2: SPLASH COMPACTO */
-        .cartaz-container.modelo-splash .badge-topo { clip-path: none; border-radius: 50px; background: linear-gradient(90deg, #e60000, #ff5500); font-size: 45px; }
+        /* METADE SUPERIOR: CABEÇALHO, IMAGEM E DESCRIÇÃO */
+        .metade-superior {
+            height: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            border-bottom: 5px dashed #000; /* Linha divisória interna */
+            padding-bottom: 10px;
+        }
 
-        /* ÁREAS DE CONTEÚDO */
-        .product-title { font-size: 42px; font-weight: 800; text-align: center; text-transform: uppercase; color: #111; margin: 20px 0; line-height: 1.1; max-height: 140px; overflow: hidden; }
-        .product-image-wrap { flex: 1; display: flex; justify-content: center; align-items: center; max-height: 40%; margin-bottom: 10px; }
-        .product-image-wrap img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .badge-topo { 
+            width: 100%; 
+            text-align: center; 
+            background-color: #e60000; 
+            color: #fff; 
+            font-size: 50px; 
+            font-weight: 900; 
+            padding: 8px 0; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
         
-        /* PRECIFICAÇÃO DINÂMICA COMPLETA */
-        .price-section { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; margin-bottom: 15px; }
-        .price-old { font-size: 24px; color: #666; text-decoration: line-through; font-weight: bold; margin-bottom: -5px; display: none; }
-        .price-main { color: #e60000; font-weight: 900; display: flex; align-items: flex-start; justify-content: center; line-height: 0.85; }
-        .rs { font-size: 45px; margin-top: 15px; font-weight: 800; margin-right: 5px; }
-        .inteiro { font-size: 165px; letter-spacing: -5px; }
-        .centavos { font-size: 75px; margin-top: 15px; font-weight: 800; border-bottom: 5px solid currentColor; padding-bottom: 2px; line-height: 0.7; }
-        
-        /* ADICIONAL: SELO EXCLUSIVO CLUBE */
-        .clube-tag { position: absolute; bottom: 15px; right: 15px; background-color: #000; color: #fff; padding: 8px 12px; font-weight: 900; border-radius: 4px; font-size: 14px; text-transform: uppercase; display: none; transform: rotate(-5deg); box-shadow: 2px 4px 10px rgba(0,0,0,0.3); }
+        /* ÁREA DA FOTO (PERTO DO CABEÇALHO - CONDICIONAL) */
+        .product-image-top { 
+            width: 100%;
+            height: 90px; 
+            display: none; /* Controlado via JS */
+            justify-content: center; 
+            align-items: center; 
+            margin-bottom: 5px;
+        }
+        .product-image-top img { max-width: 100%; max-height: 100%; object-fit: contain; }
 
-        /* AJUSTES AUTOMÁTICOS PARA O MODO 4 POR FOLHA */
-        .grid-4 .badge-topo { font-size: 22px; padding: 5px 0; }
-        .grid-4 .product-title { font-size: 20px; margin: 8px 0; max-height: 50px; }
+        .product-title { 
+            font-size: 45px; 
+            font-weight: 900; 
+            text-align: center; 
+            text-transform: uppercase; 
+            color: #111; 
+            width: 100%;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.1;
+            overflow: hidden;
+            word-break: break-word;
+        }
+        
+        /* METADE INFERIOR: PREÇO PREENCHENDO TUDO */
+        .metade-inferior {
+            height: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding-top: 10px;
+        }
+
+        .price-section { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            width: 100%; 
+            flex: 1;
+        }
+        .price-old { font-size: 26px; color: #444; text-decoration: line-through; font-weight: bold; margin-bottom: 2px; display: none; }
+        .price-main { color: #e60000; font-weight: 900; display: flex; align-items: flex-start; justify-content: center; line-height: 0.8; }
+        .rs { font-size: 55px; margin-top: 20px; font-weight: 900; margin-right: 5px; }
+        .inteiro { font-size: 190px; letter-spacing: -8px; }
+        .centavos { font-size: 85px; margin-top: 20px; font-weight: 900; border-bottom: 8px solid currentColor; padding-bottom: 2px; line-height: 0.65; }
+        .unidade-medida { font-size: 26px; color: #111; font-weight: bold; margin-left: 8px; align-self: flex-end; margin-bottom: 20px; text-transform: uppercase; }
+        
+        .clube-tag { position: absolute; bottom: 10px; right: 10px; background-color: #000; color: #fff; padding: 6px 10px; font-weight: 900; border-radius: 4px; font-size: 14px; text-transform: uppercase; display: none; transform: rotate(-3deg); }
+
+        /* ADAPTAÇÕES INTELEGENTES PARA O MODO 4 POR FOLHA */
+        .grid-4 .cartaz-container { border-width: 8px !important; padding: 8px; }
+        .grid-4 .badge-topo { font-size: 22px; padding: 4px 0; margin-bottom: 4px; }
+        .grid-4 .product-image-top { height: 40px; }
+        .grid-4 .product-title { font-size: 18px; line-height: 1.0; }
         .grid-4 .rs { font-size: 20px; margin-top: 5px; }
-        .grid-4 .inteiro { font-size: 75px; letter-spacing: -2px; }
-        .grid-4 .centavos { font-size: 35px; margin-top: 5px; border-bottom-width: 2px; }
+        .grid-4 .inteiro { font-size: 80px; letter-spacing: -3px; }
+        .grid-4 .centavos { font-size: 38px; margin-top: 5px; border-bottom-width: 4px; }
+        .grid-4 .unidade-medida { font-size: 12px; margin-bottom: 8px; margin-left: 3px; }
         .grid-4 .price-old { font-size: 14px; }
-        .grid-4 .clube-tag { font-size: 8px; padding: 4px 6px; bottom: 5px; right: 5px; }
+        .grid-4 .clube-tag { font-size: 8px; padding: 3px 5px; bottom: 5px; right: 5px; }
+        .grid-4 .metade-superior { border-bottom-width: 2px; padding-bottom: 4px; }
 
-        /* REGRAS CRÍTICAS DE IMPRESSÃO */
+        /* REGRAS DE IMPRESSÃO */
         @media print {
             body { background: #fff; color: #000; display: block; height: auto; overflow: visible; }
             .sidebar { display: none !important; }
             .main-content { padding: 0; background: none; display: block; overflow: visible; }
-            .paper-preview { box-shadow: none; border: none; margin: 0; page-break-after: always; transform: scale(1) !important; }
+            .paper-preview { box-shadow: none; border: none; margin: 0; page-break-after: always; }
             .grid-4 { width: 210mm; height: 297mm; display: grid !important; }
-            .cartaz-container { border: none !important; }
         }
     </style>
 </head>
 <body>
 
-    <!-- SIDEBAR: PAINEL DE CONTROLE (IDÊNTICO AO SaaS ORIGINAL) -->
+    <!-- CONTROLADORES DO PAINEL -->
     <div class="sidebar">
         <h2>Cartaz Fácil - Editor</h2>
         
-        <div class="group">
-            <label>Modelo do Layout</label>
-            <select id="layoutStyle" onchange="renderizarTudo()">
-                <option value="modelo-padrao">Padrão Oferta do Dia</option>
-                <option value="modelo-splash">Splash - Choque de Preço</option>
-            </select>
-        </div>
-
         <div class="group">
             <label>Formato da Impressão</label>
             <select id="boxSize" onchange="renderizarTudo()">
@@ -109,7 +175,7 @@
         </div>
 
         <div class="group">
-            <label>Cor Temática da Campanha</label>
+            <label>Cor do Tema e das Bordas</label>
             <select id="themeColor" onchange="renderizarTudo()">
                 <option value="#e60000">Vermelho (Oferta Regular)</option>
                 <option value="#ffcc00">Amarelo (Sacolão/Hortifruti)</option>
@@ -119,13 +185,19 @@
         </div>
 
         <div class="group">
-            <label>Texto do Topo (Header)</label>
-            <input type="text" id="inTopo" value="OFERTA" oninput="sincronizarDados()">
+            <label>Cabeçalho (Título do Topo)</label>
+            <select id="inTopo" onchange="sincronizarDados()">
+                <option value="OFERTA">OFERTA</option>
+                <option value="CONFIRA">CONFIRA</option>
+                <option value="SUPER OFERTA">SUPER OFERTA</option>
+                <option value="SACOLÃO">SACOLÃO</option>
+                <option value="PROMOÇÃO">PROMOÇÃO</option>
+            </select>
         </div>
 
         <div class="group">
             <label>Descrição do Produto</label>
-            <input type="text" id="inTitulo" value="ARROZ INTEGRAL TIPO 1 COMANCHE 5KG" oninput="sincronizarDados()">
+            <input type="text" id="inTitulo" value="SABÃO EM PÓ OMO SANITIZANTE 1,6KG" oninput="sincronizarDados()">
         </div>
 
         <div class="row">
@@ -134,79 +206,100 @@
                 <input type="text" id="inDe" placeholder="Ex: 24,90" oninput="sincronizarDados()">
             </div>
             <div class="group" style="flex: 1;">
-                <label>Selo Clube Especial</label>
-                <input type="text" id="inClube" placeholder="Ex: Exclusivo App" oninput="sincronizarDados()">
+                <label>Selo Clube (Opcional)</label>
+                <input type="text" id="inClube" placeholder="Ex: No App" oninput="sincronizarDados()">
             </div>
         </div>
 
         <div class="row">
             <div class="group" style="flex: 2;">
                 <label>Preço Inteiro</label>
-                <input type="number" id="inInteiro" value="18" oninput="sincronizarDados()">
+                <input type="number" id="inInteiro" value="19" oninput="sincronizarDados()">
             </div>
             <div class="group" style="flex: 1;">
                 <label>Centavos</label>
-                <input type="number" id="inCentavos" value="99" oninput="sincronizarDados()">
+                <input type="number" id="inCentavos" value="98" oninput="sincronizarDados()">
             </div>
         </div>
 
         <div class="group">
-            <label>Foto do Produto PNG (Sem Fundo)</label>
+            <label>Unidade de Medida</label>
+            <select id="inUnidade" onchange="sincronizarDados()">
+                <option value="">Nenhuma</option>
+                <option value="KG">por KG</option>
+                <option value="UN">por UN</option>
+                <option value="LT">por Litro</option>
+                <option value="PCT">por Pacote</option>
+            </select>
+        </div>
+
+        <div class="group">
+            <label>Usar Imagem no Cartaz?</label>
+            <select id="useImage" onchange="alternarVisibilidadeImagem()">
+                <option value="nao">Não usar imagem (Focar no Texto)</option>
+                <option value="sim">Sim, inserir imagem no topo</option>
+            </select>
+        </div>
+
+        <div class="group" id="divFotoInput" style="display: none;">
+            <label>Escolher Foto do Produto</label>
             <input type="file" id="inFoto" accept="image/*" onchange="processarFoto(event)">
         </div>
 
-        <button class="btn-print" onclick="window.print()">Imprimir em Alta Definição</button>
+        <button class="btn-print" onclick="window.print()">Imprimir Cartaz</button>
+        <button class="btn-save" onclick="salvarComoImagem()">Salvar para WhatsApp</button>
     </div>
 
-    <!-- MAIN CONTENT: INTERFACE DE PREVISÃO EM TEMPO REAL -->
+    <!-- ÁREA DE VISUALIZAÇÃO DO CARTAZ -->
     <div class="main-content">
-        <div id="paperContainer" class="paper-preview A4">
-            <!-- Os blocos serão gerados dinamicamente via JS aqui dentro -->
-        </div>
+        <div id="paperContainer" class="paper-preview A4"></div>
     </div>
 
-    <!-- JAVASCRIPT: MOTOR DE RENDERIZAÇÃO EM TEMPO REAL -->
     <script>
-        let imagemBase64 = "https://placeholder.com";
+        let imagemBase64 = "";
 
-        // Gera a estrutura do papel dependendo do layout escolhido (1 por folha ou 4 por folha)
         function renderizarTudo() {
             const boxSize = document.getElementById('boxSize').value;
             const container = document.getElementById('paperContainer');
-            const layoutStyle = document.getElementById('layoutStyle').value;
 
-            // Altera as classes do contêiner principal de visualização
             container.className = "paper-preview " + boxSize;
 
             let quantidadeCartazes = (boxSize === 'grid-4') ? 4 : 1;
             let cartazesHTML = '';
 
-            // Renderiza as estruturas dos blocos de ofertas
             for(let i = 0; i < quantidadeCartazes; i++) {
                 cartazesHTML += `
-                    <div class="cartaz-container ${layoutStyle}">
-                        <div class="badge-topo">OFERTA</div>
-                        <div class="product-title"></div>
-                        <div class="product-image-wrap">
-                            <img src="${imagemBase64}" alt="Produto">
-                        </div>
-                        <div class="price-section">
-                            <div class="price-old">De: R$ <span></span></div>
-                            <div class="price-main">
-                                <span class="rs">R$</span>
-                                <span class="inteiro">00</span>
-                                <span class="centavos">,00</span>
+                    <div class="cartaz-container">
+                        <!-- METADE SUPERIOR (50%) -->
+                        <div class="metade-superior">
+                            <div class="badge-topo">OFERTA</div>
+                            <div class="product-image-top">
+                                <img src="${imagemBase64}" alt="Produto">
                             </div>
+                            <div class="product-title"></div>
                         </div>
-                        <div class="clube-tag"></div>
+                        
+                        <!-- METADE INFERIOR (50%) -->
+                        <div class="metade-inferior">
+                            <div class="price-section">
+                                <div class="price-old">De: R$ <span></span></div>
+                                <div class="price-main">
+                                    <span class="rs">R$</span>
+                                    <span class="inteiro">00</span>
+                                    <span class="centavos">,00</span>
+                                    <span class="unidade-medida"></span>
+                                </div>
+                            </div>
+                            <div class="clube-tag"></div>
+                        </div>
                     </div>
                 `;
             }
             container.innerHTML = cartazesHTML;
             sincronizarDados();
+            alternarVisibilidadeImagem();
         }
 
-        // Distribui os valores inseridos na barra lateral simultaneamente em todos os cartazes ativos
         function sincronizarDados() {
             const topo = document.getElementById('inTopo').value;
             const titulo = document.getElementById('inTitulo').value;
@@ -215,21 +308,22 @@
             const inteiro = document.getElementById('inInteiro').value;
             const centavos = document.getElementById('inCentavos').value;
             const cor = document.getElementById('themeColor').value;
+            const unidade = document.getElementById('inUnidade').value;
 
-            // Injeta dados nas tags correspondentes de todos os cartazes gerados no DOM
+            // Define cores de acordo com o tema selecionado
             document.querySelectorAll('.badge-topo').forEach(el => {
                 el.innerText = topo;
-                el.style.backgroundColor = (cor === "#ffcc00") ? "#ffcc00" : cor;
+                el.style.backgroundColor = cor;
                 el.style.color = (cor === "#ffcc00") ? "#000" : "#fff";
-                if(document.getElementById('layoutStyle').value === 'modelo-splash' && cor !== '#ffcc00') {
-                    el.style.background = `linear-gradient(90deg, ${cor}, #ff5500)`;
-                }
             });
 
-            document.querySelectorAll('.cartaz-container').forEach(el => el.style.borderColor = cor);
+            // Aplica a borda ao redor do cartaz combinando com a cor do tema
+            document.querySelectorAll('.cartaz-container').forEach(el => {
+                el.style.borderColor = cor;
+            });
+
             document.querySelectorAll('.product-title').forEach(el => el.innerText = titulo);
             
-            // Gerenciamento e exibição do preço promocional "De:"
             document.querySelectorAll('.price-old').forEach(el => {
                 if(precoDe.trim() !== "") {
                     el.style.display = "block";
@@ -239,12 +333,14 @@
                 }
             });
 
-            // Ajuste do Preço Principal "Por:"
             document.querySelectorAll('.inteiro').forEach(el => el.innerText = inteiro);
             document.querySelectorAll('.centavos').forEach(el => el.innerText = centavos ? ',' + centavos : ',00');
             document.querySelectorAll('.price-main').forEach(el => el.style.color = cor);
+            
+            document.querySelectorAll('.unidade-medida').forEach(el => {
+                el.innerText = unidade ? unidade : '';
+            });
 
-            // Gerenciamento do Selo Clube
             document.querySelectorAll('.clube-tag').forEach(el => {
                 if(clube.trim() !== "") {
                     el.style.display = "block";
@@ -256,21 +352,47 @@
             });
         }
 
-        // Processa imagens locais sem requisições de servidores adicionais
+        function alternarVisibilidadeImagem() {
+            const useImage = document.getElementById('useImage').value;
+            const divInput = document.getElementById('divFotoInput');
+            
+            if(useImage === "sim") {
+                divInput.style.display = "block";
+                document.querySelectorAll('.product-image-top').forEach(el => el.style.display = "flex");
+            } else {
+                divInput.style.display = "none";
+                document.querySelectorAll('.product-image-top').forEach(el => el.style.display = "none");
+            }
+        }
+
         function processarFoto(event) {
             const reader = new FileReader();
             reader.onload = function() {
                 imagemBase64 = reader.result;
-                document.querySelectorAll('.product-image-wrap img').forEach(img => img.src = imagemBase64);
+                document.querySelectorAll('.product-image-top img').forEach(img => img.src = imagemBase64);
             }
             if(event.target.files[0]) {
                 reader.readAsDataURL(event.target.files[0]);
             }
         }
 
-        // Inicialização automática do sistema ao abrir a tela
+        function salvarComoImagem() {
+            const container = document.getElementById('paperContainer');
+            window.scrollTo(0,0);
+            html2canvas(container, {
+                useCORS: true,
+                scale: 2,
+                backgroundColor: "#ffffff"
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'cartaz-perfeito.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        }
+
         renderizarTudo();
     </script>
 </body>
-                  </html>
-
+    </html>
+    
