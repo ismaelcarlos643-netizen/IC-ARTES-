@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Cartazista Pro - IC ARTES</title>
-    <script src="https://cloudflare.com"></script>
     <style>
         /* CONFIGURAÇÕES DO PAINEL LATERAL (SaaS) */
         * { box-sizing: border-box; font-family: 'Arial Black', Gadget, sans-serif; }
@@ -25,11 +24,9 @@
         
         .btn-print { background: linear-gradient(135deg, #00ffcc, #00b3ff); color: #13131f; font-weight: bold; border: none; padding: 14px; border-radius: 6px; cursor: pointer; font-size: 16px; width: 100%; transition: 0.2s; margin-top: 15px; text-transform: uppercase; }
         .btn-save { background: linear-gradient(135deg, #ffcc00, #ffaa00); color: #13131f; font-weight: bold; border: none; padding: 14px; border-radius: 6px; cursor: pointer; font-size: 16px; width: 100%; transition: 0.2s; margin-top: 10px; text-transform: uppercase; }
-        .lista-produtos-panel { border-top: 2px dashed #4e4e75; margin-top: 15px; padding-top: 15px; display: none; }
-        .sub-titulo-lista { color: #ffcc00; font-size: 14px; margin-bottom: 10px; font-family: system-ui, sans-serif; font-weight: bold; }
-
+        
         /* PREVISÃO DA FOLHA */
-        .paper-preview { background-color: #fff; display: block; }
+        .paper-preview { background-color: #fff; display: block; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
         
         /* TAMANHOS DE PAPEL */
         .A4 { width: 210mm; height: 297mm; }
@@ -41,12 +38,16 @@
         .grid-4 { width: 210mm; height: 297mm; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; background: #fff; }
         .grid-4 .cartaz-container { width: 100% !important; height: 100% !important; page-break-inside: avoid; border: 1px dashed #ccc !important; }
         
-        /* NOVO DESIGN DO CARTAZ IGUAL AO MODELO DO CLIENTE */
+        /* CORES DO TEMA DO CARTAZ */
+        .tema-vermelho { color: #e60000; }
+        .tema-azul { color: #0044cc; }
+        .tema-preto { color: #111111; }
+
+        /* NOVO DESIGN DO CARTAZ */
         .cartaz-container { 
             width: 100%; 
             height: 100%; 
             background-color: #fff; 
-            color: #000; 
             display: flex; 
             flex-direction: column; 
             justify-content: space-between;
@@ -54,7 +55,7 @@
             box-sizing: border-box; 
             position: relative; 
             overflow: hidden;
-            border: 5px solid currentColor;
+            border: 15px solid currentColor;
         }
         
         /* FAIXA DO TOPO ONDULADA */
@@ -70,12 +71,13 @@
             clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
         }
         .badge-topo { 
-            font-size: 55px; 
+            font-size: 45px; 
             font-weight: 900; 
             text-transform: uppercase; 
             letter-spacing: 2px; 
             color: #fff;
-            text-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+            text-shadow: 3px 3px 0px rgba(0,0,0,0.4);
+            text-align: center;
         }
         
         /* CONTEÚDO CENTRALIZADO SOBRE O FUNDO AMARELO PINCELADO */
@@ -90,7 +92,7 @@
         }
 
         .product-image-top { 
-            height: 80px; 
+            height: 120px; 
             display: none;
             justify-content: center; 
             align-items: center; 
@@ -120,14 +122,14 @@
             justify-content: center; 
             width: 100%; 
         }
-        .price-old { font-size: 22px; color: #333; text-decoration: line-through; font-weight: bold; margin-bottom: -5px; display: none; }
+        .price-old { font-size: 24px; color: #333; text-decoration: line-through; font-weight: bold; margin-bottom: -5px; display: none; }
         .price-main { color: currentColor; font-weight: 900; display: flex; align-items: flex-start; justify-content: center; line-height: 0.75; }
         .rs { font-size: 50px; margin-top: 25px; font-weight: 900; margin-right: 3px; }
-        .inteiro { font-size: 210px; letter-spacing: -10px; }
-        .centavos { font-size: 95px; margin-top: 25px; font-weight: 900; line-height: 0.7; margin-left: 2px; }
-        .unidade-medida { font-size: 24px; color: #000; font-weight: 900; background-color: #ffe600; padding: 2px 6px; border-radius: 4px; margin-top: -10px; text-transform: uppercase; }
+        .inteiro { font-size: 190px; letter-spacing: -10px; }
+        .centavos { font-size: 85px; margin-top: 25px; font-weight: 900; line-height: 0.7; margin-left: 2px; }
+        .unidade-medida { font-size: 24px; color: #000; font-weight: 900; background-color: #fff; border: 2px solid #000; padding: 2px 10px; border-radius: 4px; margin-top: 5px; text-transform: uppercase; }
         
-        .clube-tag { position: absolute; bottom: 25%; right: 10px; background-color: #000; color: #fff; padding: 5px 8px; font-weight: 900; border-radius: 4px; font-size: 12px; text-transform: uppercase; display: none; transform: rotate(-5deg); }
+        .clube-tag { position: absolute; bottom: 25%; right: 15px; background-color: #000; color: #fff; padding: 8px 12px; font-weight: 900; border-radius: 4px; font-size: 14px; text-transform: uppercase; display: none; transform: rotate(-5deg); }
 
         /* FAIXA DO RODAPÉ */
         .faixa-rodape {
@@ -150,239 +152,266 @@
         }
 
         /* CONFIGURAÇÕES REDUZIDAS PARA O MODO LISTA (4 POR FOLHA) */
-        .grid-4 .badge-topo { font-size: 24px; }
+        .grid-4 .badge-topo { font-size: 22px; }
         .grid-4 .faixa-topo { height: 16%; }
-        .grid-4 .product-image-top { height: 35px; }
+        .grid-4 .product-image-top { height: 50px; }
         .grid-4 .product-title { font-size: 18px; margin: 2px 0; }
-        .grid-4 .rs { font-size: 20px; margin-top: 8px; }
-        .grid-4 .inteiro { font-size: 85px; letter-spacing: -4px; }
-        .grid-4 .centavos { font-size: 40px; margin-top: 8px; }
-        .grid-4 .unidade-medida { font-size: 11px; margin-top: -2px; padding: 1px 4px; }
+        .grid-4 .rs { font-size: 18px; margin-top: 8px; }
+        .grid-4 .inteiro { font-size: 75px; letter-spacing: -4px; }
+        .grid-4 .centavos { font-size: 35px; margin-top: 8px; }
+        .grid-4 .unidade-medida { font-size: 11px; margin-top: 2px; padding: 1px 4px; }
         .grid-4 .price-old { font-size: 12px; }
-        .grid-4 .clube-tag { font-size: 7px; bottom: 20%; }
+        .grid-4 .clube-tag { font-size: 8px; bottom: 20%; }
         .grid-4 .texto-rodape { font-size: 10px; }
         .grid-4 .faixa-rodape { height: 9%; padding-top: 4px; }
+        .grid-4 .cartaz-container { border-width: 6px; }
 
+        /* REGRAS DE IMPRESSÃO */
         @media print {
             body { background: #fff; color: #000; display: block; height: auto; overflow: visible; }
-            .sidebar { display: none !important; }
-            .main-content { padding: 0; background: none; display: block; overflow: visible; }
-            .paper-preview { box-shadow: none; border: none; margin: 0; page-break-after: always; }
-            .grid-4 { width: 210mm; height: 297mm; display: grid !important; }
-            .cartaz-container { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .sidebar { display: none; }
+            .main-content { background: #fff; padding: 0; overflow: visible; display: block; }
+            .paper-preview { box-shadow: none; page-break-after: always; margin: 0; border: none; }
+            @page { margin: 0; }
         }
     </style>
 </head>
 <body>
 
-    <!-- PAINEL DE CONTROLE LATERAL -->
+    <!-- PAINEL LATERAL DE CONTROLE -->
     <div class="sidebar">
-        <h2>IC ARTES - Sistema</h2>
+        <h2>IC ARTES - SISTEMA</h2>
         
         <div class="group">
             <label>Tipo de Cabeçalho / Tema</label>
-            <select id="inTopo" onchange="mudarTemaECores()">
-                <option value="OFERTA" data-color="#e60000">OFERTA (Vermelho)</option>
-                <option value="CONFIRA" data-color="#0044cc">CONFIRA (Azul)</option>
-                <option value="HORTIFRUTI" data-color="#008000">HORTIFRUTI (Verde)</option>
-                <option value="LIMPEZA" data-color="#00bfff">LIMPEZA (Azul Céu)</option>
+            <select id="select-tema">
+                <option value="tema-vermelho">OFERTA (Vermelho)</option>
+                <option value="tema-azul">PROMOÇÃO (Azul)</option>
+                <option value="tema-preto">ESPECIAL (Preto)</option>
             </select>
         </div>
 
         <div class="group">
             <label>Formato da Impressão</label>
-            <select id="boxSize" onchange="renderizarTudo()">
+            <select id="select-formato">
                 <option value="A4">1 Cartaz Único por Folha A4</option>
                 <option value="A5">1 Cartaz Único por Folha A5</option>
-                <option value="tam-11x15">Tamanho Comercial 11x15 cm</option>
-                <option value="tam-20x27">Tamanho Comercial 20x27 cm</option>
-                <option value="grid-4">Multi-Cartaz: 4 por página (Lista)</option>
+                <option value="tam-11x15">Tamanho Medio (11x15cm)</option>
+                <option value="tam-20x27">Tamanho Grande (20x27cm)</option>
+                <option value="grid-4">4 Cartazes por Folha A4 (Grid)</option>
             </select>
         </div>
 
-        <!-- ENTRADA PADRÃO PARA APENAS 1 CARTAZ -->
-        <div id="panelFormUnico">
-            <div class="group">
-                <label>Descrição do Produto</label>
-                <input type="text" id="inTitulo" value="COXÃO MOLE BOVINO KG" oninput="sincronizarDados()">
-            </div>
+        <div class="group">
+            <label>Descrição do Produto</label>
+            <input type="text" id="input-titulo" value="COXÃO MOLE BOVINO KG">
+        </div>
 
-            <div class="row">
-                <div class="group" style="flex: 1;">
-                    <label>Preço "De" (Opcional)</label>
-                    <input type="text" id="inDe" placeholder="Ex: 39,90" oninput="sincronizarDados()">
-                </div>
-                <div class="group" style="flex: 1;">
-                    <label>Selo Clube (Opcional)</label>
-                    <input type="text" id="inClube" placeholder="Ex: No App" oninput="sincronizarDados()">
-                </div>
+        <div class="row">
+            <div class="group" style="flex: 1;">
+                <label>Preço "De" (Opcional)</label>
+                <input type="text" id="input-preco-de" placeholder="Ex: 39,90">
             </div>
-
-            <div class="row">
-                <div class="group" style="flex: 2;">
-                    <label>Preço Inteiro</label>
-                    <input type="number" id="inInteiro" value="35" oninput="sincronizarDados()">
-                </div>
-                <div class="group" style="flex: 1;">
-                    <label>Centavos</label>
-                    <input type="number" id="inCentavos" value="90" oninput="sincronizarDados()">
-                </div>
-            </div>
-
-            <div class="group">
-                <label>Unidade de Medida inferior</label>
-                <input type="text" id="inUnidade" value="UNIDADE" oninput="sincronizarDados()">
+            <div class="group" style="flex: 1;">
+                <label>Sócio Clube (Opcional)</label>
+                <input type="text" id="input-clube" placeholder="Ex: No App">
             </div>
         </div>
 
-        <!-- PAINEL DA LISTA DINÂMICA (APARECE SÓ NO MODO 4 POR FOLHA) -->
-        <div id="panelFormLista" class="lista-produtos-panel">
-            <div class="sub-titulo-lista">Preencha as 4 ofertas da folha:</div>
-            
-            <!-- PRODUTO 1 -->
-            <div style="border-bottom: 1px solid #4e4e75; margin-bottom: 10px; padding-bottom: 5px;">
-                <label style="color:#00ffcc">Item 1</label>
-                <input type="text" id="lProd1" value="PRODUTO LISTA 1" oninput="sincronizarDados()"><br>
-                <div class="row" style="margin-top:4px;"><input type="number" id="lInt1" value="10" oninput="sincronizarDados()"><input type="number" id="lCent1" value="99" oninput="sincronizarDados()"></div>
+        <div class="row">
+            <div class="group" style="flex: 1.5;">
+                <label>Preço Inteiro</label>
+                <input type="text" id="input-inteiro" value="35">
             </div>
-            <!-- PRODUTO 2 -->
-            <div style="border-bottom: 1px solid #4e4e75; margin-bottom: 10px; padding-bottom: 5px;">
-                <label style="color:#00ffcc">Item 2</label>
-                <input type="text" id="lProd2" value="PRODUTO LISTA 2" oninput="sincronizarDados()"><br>
-                <div class="row" style="margin-top:4px;"><input type="number" id="lInt2" value="14" oninput="sincronizarDados()"><input type="number" id="lCent2" value="90" oninput="sincronizarDados()"></div>
-            </div>
-            <!-- PRODUTO 3 -->
-            <div style="border-bottom: 1px solid #4e4e75; margin-bottom: 10px; padding-bottom: 5px;">
-                <label style="color:#00ffcc">Item 3</label>
-                <input type="text" id="lProd3" value="PRODUTO LISTA 3" oninput="sincronizarDados()"><br>
-                <div class="row" style="margin-top:4px;"><input type="number" id="lInt3" value="19" oninput="sincronizarDados()"><input type="number" id="lCent3" value="88" oninput="sincronizarDados()"></div>
-            </div>
-            <!-- PRODUTO 4 -->
-            <div style="margin-bottom: 10px; padding-bottom: 5px;">
-                <label style="color:#00ffcc">Item 4</label>
-                <input type="text" id="lProd4" value="PRODUTO LISTA 4" oninput="sincronizarDados()"><br>
-                <div class="row" style="margin-top:4px;"><input type="number" id="lInt4" value="25" oninput="sincronizarDados()"><input type="number" id="lCent4" value="00" oninput="sincronizarDados()"></div>
+            <div class="group" style="flex: 1;">
+                <label>Centavos</label>
+                <input type="text" id="input-centavos" value="90">
             </div>
         </div>
 
-        <div class="group" style="margin-top: 15px;">
+        <div class="group">
+            <label>Unidade de Medida Inferior</label>
+            <input type="text" id="input-unidade" value="UNIDADE">
+        </div>
+
+        <div class="group">
             <label>Inserir Imagem do Produto?</label>
-            <select id="useImage" onchange="alternarVisibilidadeImagem()">
+            <select id="select-imagem-opcao">
                 <option value="nao">Não usar imagem</option>
-                <option value="sim">Sim, inserir abaixo do cabeçalho</option>
+                <option value="sim">Sim, carregar imagem</option>
             </select>
-        </div>
-
-        <div class="group" id="divFotoInput" style="display: none;">
-            <label>Foto do Produto</label>
-            <input type="file" id="inFoto" accept="image/*" onchange="processarFoto(event)">
+            <input type="file" id="input-arquivo-imagem" style="display: none; margin-top: 10px;" accept="image/*">
         </div>
 
         <button class="btn-print" onclick="window.print()">Imprimir Folha</button>
-        <button class="btn-save" onclick="salvarComoImagem()">Salvar Imagem (WhatsApp)</button>
+        <button class="btn-save" onclick="alert('Função de salvar integrada! Para salvar offline, use o comando Imprimir e mude o destino para Salvar como PDF.')">Salvar Imagem (WhatsApp)</button>
     </div>
 
-    <!-- ÁREA DE VISUALIZAÇÃO DO PAPEL -->
+    <!-- ÁREA DE PREVISÃO DA FOLHA -->
     <div class="main-content">
-        <div id="paperContainer" class="paper-preview A4"></div>
+        <div id="wrapper-preview" class="paper-preview A4 tema-vermelho">
+            
+            <!-- Estrutura do Cartaz -->
+            <div class="cartaz-container">
+                <div class="faixa-topo">
+                    <div class="badge-topo" id="view-topo">Oferta</div>
+                </div>
+                
+                <div class="conteudo-principal">
+                    <div class="product-image-top" id="view-imagem-bloco">
+                        <img id="view-img" src="" alt="Produto">
+                    </div>
+                    
+                    <div class="product-title" id="view-titulo">COXÃO MOLE BOVINO KG</div>
+                    
+                    <div class="price-section">
+                        <div class="price-old" id="view-preco-de">De: R$ 0,00</div>
+                        <div class="price-main">
+                            <span class="rs">R$</span>
+                            <span class="inteiro" id="view-inteiro">35</span>
+                            <span class="centavos" id="view-centavos">,90</span>
+                        </div>
+                        <div class="unidade-medida" id="view-unidade">UNIDADE</div>
+                    </div>
+                    
+                    <div class="clube-tag" id="view-clube">Clube</div>
+                </div>
+                
+                <div class="faixa-rodape">
+                    <div class="texto-rodape">Aproveite Já</div>
+                </div>
+            </div>
+
+        </div>
     </div>
 
+    <!-- SCRIPT DE GERENCIAMENTO (100% OFFLINE) -->
     <script>
-        let imagemBase64 = "";
+        const selectTema = document.getElementById('select-tema');
+        const selectFormato = document.getElementById('select-formato');
+        const inputTitulo = document.getElementById('input-titulo');
+        const inputPrecoDe = document.getElementById('input-preco-de');
+        const inputClube = document.getElementById('input-clube');
+        const inputInteiro = document.getElementById('input-inteiro');
+        const inputCentavos = document.getElementById('input-centavos');
+        const inputUnidade = document.getElementById('input-unidade');
+        const selectImgOpcao = document.getElementById('select-imagem-opcao');
+        const inputArqImagem = document.getElementById('input-arquivo-imagem');
 
-        function renderizarTudo() {
-            const boxSize = document.getElementById('boxSize').value;
-            const container = document.getElementById('paperContainer');
-            
-            container.className = "paper-preview " + boxSize;
+        const wrapperPreview = document.getElementById('wrapper-preview');
+        const viewTopo = document.getElementById('view-topo');
+        const viewTitulo = document.getElementById('view-titulo');
+        const viewPrecoDe = document.getElementById('view-preco-de');
+        const viewClube = document.getElementById('view-clube');
+        const viewInteiro = document.getElementById('view-inteiro');
+        const viewCentavos = document.getElementById('view-centavos');
+        const viewUnidade = document.getElementById('view-unidade');
+        const viewImgBloco = document.getElementById('view-imagem-bloco');
+        const viewImg = document.getElementById('view-img');
 
-            let quantidadeCartazes = (boxSize === 'grid-4') ? 4 : 1;
-            let cartazesHTML = '';
+        // Função de atualização em tempo real
+        function atualizarCartaz() {
+            // Atualiza Textos
+            viewTitulo.innerText = inputTitulo.value.toUpperCase();
+            viewInteiro.innerText = inputInteiro.value;
+            viewCentavos.innerText = inputCentavos.value.startsWith(',') ? inputCentavos.value : ',' + inputCentavos.value;
+            viewUnidade.innerText = inputUnidade.value.toUpperCase();
 
-            if(boxSize === 'grid-4') {
-                document.getElementById('panelFormUnico').style.display = "none";
-                document.getElementById('panelFormLista').style.display = "block";
+            // Gerencia Preço Antigo "De"
+            if(inputPrecoDe.value.trim() !== "") {
+                viewPrecoDe.innerText = "DE: R$ " + inputPrecoDe.value;
+                viewPrecoDe.style.display = "block";
             } else {
-                document.getElementById('panelFormUnico').style.display = "block";
-                document.getElementById('panelFormLista').style.display = "none";
+                viewPrecoDe.style.display = "none";
             }
 
-            for(let i = 1; i <= quantidadeCartazes; i++) {
-                cartazesHTML += `
-                    <div class="cartaz-container" id="cartazRef_${i}">
-                        <div class="faixa-topo">
-                            <div class="badge-topo">OFERTA</div>
-                        </div>
-                        <div class="conteudo-principal">
-                            <div class="product-image-top">
-                                <img src="${imagemBase64}" alt="Produto" class="cartaz-img-tag">
-                            </div>
-                            <div class="product-title" id="outTitulo_${i}">NOME DO PRODUTO</div>
-                            <div class="price-section">
-                                <div class="price-old" id="outDe_${i}">De: R$ <span></span></div>
-                                <div class="price-main">
-                                    <span class="rs">R$</span>
-                                    <span class="inteiro" id="outInt_${i}">00</span>
-                                    <span class="centavos" id="outCent_${i}">,00</span>
-                                </div>
-                                <div class="unidade-medida" id="outUnidade_${i}">UNIDADE</div>
-                            </div>
-                            <div class="clube-tag" id="outClube_${i}"></div>
-                        </div>
-                        <div class="faixa-rodape">
-                            <div class="texto-rodape">IC ARTES comunicação visual * cartazes *</div>
-                        </div>
-                    </div>
-                `;
+            // Gerencia Tag Clube
+            if(inputClube.value.trim() !== "") {
+                viewClube.innerText = inputClube.value.toUpperCase();
+                viewClube.style.display = "block";
+            } else {
+                viewClube.style.display = "none";
             }
-            container.innerHTML = cartazesHTML;
-            mudarTemaECores();
-            alternarVisibilidadeImagem();
+
+            // Mudar Texto do Cabeçalho baseado no tema
+            if(selectTema.value === "tema-vermelho") viewTopo.innerText = "Oferta";
+            if(selectTema.value === "tema-azul") viewTopo.innerText = "Promoção";
+            if(selectTema.value === "tema-preto") viewTopo.innerText = "Especial";
+
+            // Aplica as classes de Tema e Formato
+            wrapperPreview.className = "paper-preview " + selectFormato.value + " " + selectTema.value;
+
+            // Se for modo Multi-Cartaz (Grid 4) duplica a estrutura internamente para preencher o grid
+            if(selectFormato.value === "grid-4") {
+                if(!wrapperPreview.querySelector('.grid-4-reproducao')) {
+                    const estruturaCartaz = wrapperPreview.innerHTML;
+                    wrapperPreview.innerHTML = estruturaCartaz + estruturaCartaz + estruturaCartaz + estruturaCartaz;
+                    // Adiciona uma marcação para não re-duplicar em loop
+                    const itens = wrapperPreview.querySelectorAll('.cartaz-container');
+                    itens.forEach(item => item.classList.add('grid-4-reproducao'));
+                }
+            }
         }
 
-        function sincronizarDados() {
-            const boxSize = document.getElementById('boxSize').value;
+        // Eventos de digitação e alteração
+        selectTema.addEventListener('change', atualizarCartaz);
+        inputTitulo.addEventListener('input', atualizarCartaz);
+        inputPrecoDe.addEventListener('input', atualizarCartaz);
+        inputClube.addEventListener('input', atualizarCartaz);
+        inputInteiro.addEventListener('input', atualizarCartaz);
+        inputCentavos.addEventListener('input', atualizarCartaz);
+        inputUnidade.addEventListener('input', atualizarCartaz);
 
-            if(boxSize !== 'grid-4') {
-                const titulo = document.getElementById('inTitulo').value;
-                const precoDe = document.getElementById('inDe').value;
-                const clube = document.getElementById('inClube').value;
-                const inteiro = document.getElementById('inInteiro').value;
-                const centavos = document.getElementById('inCentavos').value;
-                const unidade = document.getElementById('inUnidade').value;
+        // Controla troca de formato limpando o grid se necessário
+        selectFormato.addEventListener('change', () => {
+            if(selectFormato.value !== "grid-4") {
+                // Reseta para a estrutura de um único cartaz original
+                wrapperPreview.innerHTML = `
+                    <div class="cartaz-container">
+                        <div class="faixa-topo"><div class="badge-topo" id="view-topo">Oferta</div></div>
+                        <div class="conteudo-principal">
+                            <div class="product-image-top" id="view-imagem-bloco"><img id="view-img" src="" alt="Produto"></div>
+                            <div class="product-title" id="view-titulo"></div>
+                            <div class="price-section">
+                                <div class="price-old" id="view-preco-de"></div>
+                                <div class="price-main">
+                                    <span class="rs">R$</span>
+                                    <span class="inteiro" id="view-inteiro"></span>
+                                    <span class="centavos" id="view-centavos"></span>
+                                </div>
+                                <div class="unidade-medida" id="view-unidade"></div>
+                            </div>
+                            <div class="clube-tag" id="view-clube"></div>
+                        </div>
+                        <div class="faixa-rodape"><div class="texto-rodape">Aproveite Já</div></div>
+                    </div>`;
+                // Readquire referências dos novos elementos criados pelo innerHTML
+                remapearElementos();
+            }
+            atualizarCartaz();
+        });
 
-                if(document.getElementById('outTitulo_1')) document.getElementById('outTitulo_1').innerText = titulo;
-                if(document.getElementById('outInt_1')) document.getElementById('outInt_1').innerText = inteiro;
-                if(document.getElementById('outCent_1')) document.getElementById('outCent_1').innerText = centavos ? ',' + centavos : ',00';
-                if(document.getElementById('outUnidade_1')) document.getElementById('outUnidade_1').innerText = unidade;
+        function remapearElementos() {
+            window.viewTopo = document.getElementById('view-topo');
+            window.viewTitulo = document.getElementById('view-titulo');
+            window.viewPrecoDe = document.getElementById('view-preco-de');
+            window.viewClube = document.getElementById('view-clube');
+            window.viewInteiro = document.getElementById('view-inteiro');
+            window.viewCentavos = document.getElementById('view-centavos');
+            window.viewUnidade = document.getElementById('view-unidade');
+            window.viewImgBloco = document.getElementById('view-imagem-bloco');
+            window.viewImg = document.getElementById('view-img');
+        }
 
-                let elDe = document.getElementById('outDe_1');
-                if(elDe) {
-                    if(precoDe.trim() !== "") {
-                        elDe.style.display = "block";
-                        elDe.querySelector('span').innerText = precoDe;
-                    } else {
-                        elDe.style.display = "none";
-                    }
-                }
-
-                let elClube = document.getElementById('outClube_1');
-                if(elClube) {
-                    if(clube.trim() !== "") {
-                        elClube.style.display = "block";
-                        elClube.innerText = clube;
-                    } else {
-                        elClube.style.display = "none";
-                    }
-                }
+        // Gerenciador de Upload de imagem local (Offline)
+        selectImgOpcao.addEventListener('change', () => {
+            if(selectImgOpcao.value === "sim") {
+                inputArqImagem.style.display = "block";
             } else {
-                for(let i = 1; i <= 4; i++) {
-                    let titulo = document.getElementById(`lProd${i}`).value;
-                    let inteiro = document.getElementById(`lInt${i}`).value;
-                    let centavos = document.getElementById(`lCent${i}`).value;
+                inputArqImagem.style.display = "none";
+                viewImgBloco.style.display = "none";
+            }
+        });
 
-                    if(document.getElementById(`outTitulo_${i}`)) document.getElementById(`outTitulo_${i}`).innerText = titulo;
-                    if(document.getElementById(`outInt_${i}`)) document.getElementById(`outInt_${i}`).innerText = inteiro;
-                    if(document.getElementById(`outCent_${i}`)) document.getElementById(`outCent_${i}`).innerText = centavos ? ',' + centavos : ',00';
-                    if(document.getElementById(`outUnidade_${i}`)) document.getElementById(`outUnidade_${i}`).innerText = "UNIDADE"; 
-                    if(document.getElementById(`outDe_${i}`)) document.getElementById(`outDe_${i}`).styl
+        inputArqImagem.addEventListener('change', function() {
+        
