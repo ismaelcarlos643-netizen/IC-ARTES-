@@ -3,398 +3,317 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Cartazista Pro - IC ARTES</title>
+    <title>Gerador de Cartazes de Oferta estilo Cartaz Fácil</title>
     <style>
-        /* CONFIGURAÇÕES DO PAINEL LATERAL (SaaS) */
-        * { box-sizing: border-box; font-family: 'Arial Black', Gadget, sans-serif; }
-        body { margin: 0; background-color: #1e1e2f; color: #fff; display: flex; height: 100vh; overflow: hidden; }
-        @media (max-width: 768px) { body { flex-direction: column; overflow: auto; height: auto; } }
-        
-        .sidebar { width: 380px; background-color: #26263f; padding: 20px; overflow-y: auto; box-shadow: 4px 0 10px rgba(0,0,0,0.3); z-index: 10; font-family: system-ui, sans-serif; }
-        @media (max-width: 768px) { .sidebar { width: 100%; height: auto; overflow: visible; } }
-        
-        .main-content { flex: 1; background-color: #13131f; display: flex; align-items: center; justify-content: center; padding: 20px; overflow: auto; min-height: 100vh; }
-        
-        h2 { font-size: 18px; margin-top: 0; color: #00ffcc; border-bottom: 2px solid #3d3d5c; padding-bottom: 10px; font-family: system-ui, sans-serif; text-transform: uppercase; }
-        .group { margin-bottom: 15px; }
-        label { display: block; font-size: 13px; color: #a2a2c2; margin-bottom: 5px; font-weight: 600; font-family: system-ui, sans-serif; }
-        input, select, textarea { width: 100%; padding: 10px; background-color: #31314f; border: 1px solid #4e4e75; border-radius: 6px; color: #fff; font-size: 15px; outline: none; font-family: system-ui, sans-serif; }
-        input:focus, select:focus, textarea:focus { border-color: #00ffcc; }
-        .row { display: flex; gap: 10px; }
-        textarea { height: 140px; resize: none; font-size: 12px; }
-        
-        .btn-print { background: linear-gradient(135deg, #00ffcc, #00b3ff); color: #13131f; font-weight: bold; border: none; padding: 14px; border-radius: 6px; cursor: pointer; font-size: 16px; width: 100%; transition: 0.2s; margin-top: 15px; text-transform: uppercase; }
-        
-        /* ZONA DE IMPRESSÃO */
-        .print-zone { display: flex; flex-direction: column; gap: 30px; }
-        .paper-preview { background-color: #fff; display: block; box-shadow: 0 0 20px rgba(0,0,0,0.5); overflow: hidden; position: relative; page-break-after: always; }
-        
-        /* DEFINIÇÕES DE TAMANHOS DE FOLHA */
-        .A4-retrato { width: 210mm; height: 297mm; }
-        .A4-paisagem { width: 297mm; height: 210mm; }
-        
-        /* GRIDS DE MULTIPLOS CARTAZES */
-        .grid-2-folha { width: 210mm; height: 297mm; display: grid; grid-template-rows: 1fr 1fr; background: #fff; page-break-after: always; }
-        .grid-2-folha .cartaz-container { border: 1px dashed #777 !important; height: 100% !important; width: 100% !important; }
-        
-        .grid-4-folha { width: 210mm; height: 297mm; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; background: #fff; page-break-after: always; }
-        .grid-4-folha .cartaz-container { border: 1px dashed #777 !important; height: 100% !important; width: 100% !important; }
-
-        /* CORES DOS TEMAS */
-        .tema-confira { --cor-tema: #002244; --cor-texto-topo: #ffcc00; --texto-topo: "CONFIRA"; }
-        .tema-azul-royal { --cor-tema: #0044cc; --cor-texto-topo: #ffffff; --texto-topo: "OFERTA"; }
-        .tema-promocao-vermelho { --cor-tema: #e60000; --cor-texto-topo: #ffcc00; --texto-topo: "PROMOÇÃO"; }
-        .tema-hortifruti-verde { --cor-tema: #008000; --cor-texto-topo: #ffffff; --texto-topo: "HORTIFRUTI"; }
-        .tema-limpeza-azul-ceu { --cor-tema: #00bfff; --cor-texto-topo: #ffffff; --texto-topo: "LIMPEZA"; }
-
-        /* REESTRUTURAÇÃO DO LAYOUT EM METADES (50% / 50%) */
-        .cartaz-container { 
-            width: 100%; 
-            height: 100%; 
-            background-color: #fff; 
-            display: flex; 
-            flex-direction: column; 
-            box-sizing: border-box; 
-            position: relative; 
-            overflow: hidden;
+        :root {
+            --primary: #2563eb;
+            --bg-app: #f1f5f9;
         }
-        
-        /* Topo Fixo */
-        .faixa-topo {
-            width: 100%;
-            height: 14%;
-            background-color: var(--cor-tema);
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-app);
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Painel de Controle Lateral */
+        .control-panel {
+            width: 350px;
+            background: #ffffff;
+            padding: 20px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow-y: auto;
+            z-index: 10;
+        }
+
+        .control-panel h2 {
+            font-size: 1.2rem;
+            color: #1e293b;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #475569;
+        }
+
+        .form-group input, .form-group select {
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 0.95rem;
+        }
+
+        .btn-print {
+            background-color: #22c55e;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.2s;
+            margin-top: 10px;
+        }
+
+        .btn-print:hover {
+            background-color: #16a34a;
+        }
+
+        /* Área de Visualização do Cartaz */
+        .preview-area {
+            flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-bottom-left-radius: 50% 20px;
-            border-bottom-right-radius: 50% 20px;
+            padding: 20px;
+            overflow: auto;
         }
-        .badge-topo { font-size: 55px; font-weight: 900; text-transform: uppercase; color: var(--cor-texto-topo); text-shadow: 2px 3px 0px rgba(0,0,0,0.3); }
-        
-        /* Corpo dividido em duas seções de 43% cada (Total 86% + 14% topo) */
-        .metade-descricao {
-            height: 38%;
+
+        /* Estrutura Base do Cartaz Dinâmico */
+        .poster-canvas {
+            background-color: #ffcc00;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            position: relative;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-            padding: 10px 20px;
-            background: #fff;
-            z-index: 2;
-        }
-        .product-title { 
-            font-size: 65px; 
-            font-weight: 900; 
-            text-align: center; 
-            text-transform: uppercase; 
-            color: #000; 
-            line-height: 0.9;
-            letter-spacing: -2px;
-            width: 100%;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
+            justify-content: space-between;
+            padding: 4%;
+            box-sizing: border-box;
             overflow: hidden;
         }
-        
-        .metade-preco {
-            height: 48%;
+
+        /* Tamanhos Suportados */
+        .size-a4 { width: 595px; height: 842px; }
+        .size-a3 { width: 842px; height: 1191px; font-size: 1.4rem; }
+        .size-a5 { width: 420px; height: 595px; font-size: 0.8rem; }
+
+        /* Elementos Internos Estilo Supermercado */
+        .poster-header {
+            width: 100%;
+            text-align: center;
+            background: #cc0000;
+            color: white;
+            padding: 15px;
+            font-size: 2.5em;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-radius: 8px;
+            text-shadow: 2px 2px 0px #000;
+        }
+
+        .poster-body {
+            flex: 1;
+            width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            position: relative;
-            background: radial-gradient(ellipse at center, #ffcc00 0%, #ffdb1a 60%, #ffffff 100%);
-            border-top-left-radius: 50% 30px;
-            border-top-right-radius: 50% 30px;
-            padding-bottom: 25px;
+            text-align: center;
+            padding: 20px 0;
         }
-        
-        /* PREÇOS GIGANTES */
-        .price-main { color: #e60000; font-weight: 900; display: flex; align-items: flex-start; justify-content: center; line-height: 0.65; }
-        .inteiro { font-size: 290px; letter-spacing: -18px; }
-        .centavos-box { display: flex; flex-direction: column; align-items: flex-start; margin-left: 10px; margin-top: 10px; }
-        .centavos { font-size: 130px; font-weight: 900; }
-        .unidade-medida { font-size: 32px; color: #000; font-weight: 900; text-transform: uppercase; margin-top: 5px; background: #fff; padding: 2px 12px; border: 3px solid #000; border-radius: 6px; }
-        
-        /* Rodapé Fixo Absoluto */
-        .faixa-rodape {
-            position: absolute;
-            bottom: 0;
-            left: 0;
+
+        .product-title {
+            font-size: 3em;
+            font-weight: 900;
+            color: #000000;
+            text-transform: uppercase;
+            line-height: 1.1;
+            margin-bottom: 10px;
+            word-break: break-word;
+        }
+
+        .product-desc {
+            font-size: 1.4em;
+            color: #333;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .poster-footer {
             width: 100%;
-            height: 7%;
-            background-color: var(--cor-tema);
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            border-top-left-radius: 50% 15px;
-            border-top-right-radius: 50% 15px;
         }
-        .texto-rodape { font-size: 24px; font-weight: 900; color: #fff; text-transform: uppercase; }
 
-        /* ========================================================
-           AJUSTES DE ESCALA PARA OS NOVOS TAMANHOS DE IMPRESSÃO
-        ======================================================== */
-        
-        /* A4 PAISAGEM */
-        .A4-paisagem .badge-topo { font-size: 45px; }
-        .A4-paisagem .product-title { font-size: 50px; }
-        .A4-paisagem .inteiro { font-size: 200px; letter-spacing: -12px; }
-        .A4-paisagem .centavos { font-size: 90px; }
-        .A4-paisagem .unidade-medida { font-size: 24px; }
-        .A4-paisagem .metade-preco { padding-bottom: 10px; }
+        .price-container {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            color: #cc0000;
+            font-weight: 900;
+        }
 
-        /* GRID 2 POR FOLHA (Médio) */
-        .grid-2-folha .badge-topo { font-size: 42px; }
-        .grid-2-folha .product-title { font-size: 45px; }
-        .grid-2-folha .inteiro { font-size: 180px; letter-spacing: -10px; }
-        .grid-2-folha .centavos { font-size: 80px; }
-        .grid-2-folha .unidade-medida { font-size: 22px; }
-        .grid-2-folha .metade-preco { padding-bottom: 15px; }
+        .currency {
+            font-size: 2.5em;
+            margin-right: 5px;
+        }
 
-        /* GRID 4 POR FOLHA (Pequeno) */
-        .grid-4-folha .badge-topo { font-size: 32px; }
-        .grid-4-folha .product-title { font-size: 30px; letter-spacing: -1px; }
-        .grid-4-folha .inteiro { font-size: 120px; letter-spacing: -6px; }
-        .grid-4-folha .centavos { font-size: 55px; }
-        .grid-4-folha .unidade-medida { font-size: 16px; border-width: 2px; padding: 1px 6px; }
-        .grid-4-folha .metade-preco { padding-bottom: 5px; }
-        .grid-4-folha .texto-rodape { font-size: 14px; }
+        .price-main {
+            font-size: 7.5em;
+            line-height: 0.9;
+            letter-spacing: -3px;
+        }
 
-        /* REGRAS DE IMPRESSÃO DO NAVEGADOR */
+        .price-cents {
+            font-size: 3.5em;
+            align-self: flex-start;
+            margin-top: 10px;
+            text-decoration: underline;
+        }
+
+        /* --- TEMAS VISUAIS CUSTOMIZADOS --- */
+        /* Tema Black Friday */
+        .theme-black { background-color: #111111; }
+        .theme-black .poster-header { background: #ffcc00; color: #000; text-shadow: none; }
+        .theme-black .product-title { color: #ffffff; }
+        .theme-black .product-desc { color: #aaaaaa; }
+        .theme-black .price-container { color: #ff0000; }
+
+        /* Tema Hortifrúti */
+        .theme-green { background-color: #f0fdf4; border: 15px solid #16a34a; }
+        .theme-green .poster-header { background: #16a34a; color: white; text-shadow: none; }
+        .theme-green .product-title { color: #14532d; }
+        .theme-green .price-container { color: #dc2626; }
+
+        /* Regras de Impressão (Garante que apenas o cartaz saia na folha inteira) */
         @media print {
-            body { background: #fff; color: #000; display: block; height: auto; overflow: visible; }
-            .sidebar { display: none; }
-            .main-content { background: #fff; padding: 0; overflow: visible; display: block; }
-            .print-zone { gap: 0; }
-            .paper-preview, .grid-2-folha, .grid-4-folha { box-shadow: none; margin: 0; border: none; page-break-inside: avoid; page-break-after: always; }
-            
-            /* Detecta automaticamente orientação paisagem se a classe estiver ativa */
-            .A4-paisagem { page-break-inside: avoid; }
+            body { background: white; }
+            .control-panel { display: none !important; }
+            .preview-area { padding: 0; overflow: visible; }
+            .poster-canvas {
+                box-shadow: none;
+                margin: 0;
+                width: 100vw;
+                height: 100vh;
+                page-break-after: always;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- PAINEL LATERAL DE CONTROLE -->
-    <div class="sidebar">
-        <h2>IC ARTES - SISTEMA</h2>
+    <!-- Painel de Controle -->
+    <div class="control-panel">
+        <h2>Gerador de Cartazes</h2>
         
-        <div class="group">
-            <label>Selecione o Tema / Cor</label>
-            <select id="select-tema">
-                <option value="tema-promocao-vermelho">PROMOÇÃO (Vermelho)</option>
-                <option value="tema-confira">CONFIRA (Azul Escuro)</option>
-                <option value="tema-azul-royal">OFERTA (Azul Royal)</option>
-                <option value="tema-hortifruti-verde">HORTIFRUTI (Verde)</option>
-                <option value="tema-limpeza-azul-ceu">LIMPEZA (Azul Céu)</option>
+        <div class="form-group">
+            <label for="input-theme">Tema Visual</label>
+            <select id="input-theme" oninput="updatePoster()">
+                <option value="default">Oferta Tradicional (Amarelo/Vermelho)</option>
+                <option value="theme-black">Black Friday (Preto/Neon)</option>
+                <option value="theme-green">Hortifrúti / Saudável (Verde)</option>
             </select>
         </div>
 
-        <div class="group">
-            <label>Formato de Impressão</label>
-            <select id="select-formato">
-                <option value="A4-retrato">A4 Retrato (1 Grande por Folha)</option>
-                <option value="A4-paisagem">A4 Paisagem (Horizontal)</option>
-                <option value="GRID-2">A4 - 2 Cartazes Médios por Folha</option>
-                <option value="GRID-4">A4 - 4 Cartazes Pequenos por Folha</option>
+        <div class="form-group">
+            <label for="input-size">Tamanho do Cartaz</label>
+            <select id="input-size" oninput="updatePoster()">
+                <option value="size-a4">A4 (Padrão)</option>
+                <option value="size-a3">A3 (Grande para Vitrine)</option>
+                <option value="size-a5">A5 (Pequeno para Gôndola)</option>
             </select>
         </div>
 
-        <div class="group">
-            <label>Modo de Entrada de Dados</label>
-            <select id="select-modo" onchange="alternarModo()">
-                <option value="unico">Produto Único</option>
-                <option value="lista">Lista de Produtos (Lote)</option>
-            </select>
+        <div class="form-group">
+            <label for="input-badge">Texto do Cabeçalho</label>
+            <input type="text" id="input-badge" value="OFERTA" oninput="updatePoster()">
         </div>
 
-        <!-- FORMULÁRIO DE PRODUTO ÚNICO -->
-        <div id="form-unico">
-            <div class="group">
-                <label>Descrição do Produto</label>
-                <input type="text" id="input-titulo" value="COXÃO MOLE BOVINO KG">
-            </div>
-
-            <div class="row">
-                <div class="group" style="flex: 1.5;">
-                    <label>Preço Inteiro</label>
-                    <input type="text" id="input-inteiro" value="35">
-                </div>
-                <div class="group" style="flex: 1;">
-                    <label>Centavos</label>
-                    <input type="text" id="input-centavos" value="90">
-                </div>
-            </div>
-
-            <div class="group">
-                <label>Unidade de Medida</label>
-                <input type="text" id="input-unidade" value="KG">
-            </div>
+        <div class="form-group">
+            <label for="input-title">Nome do Produto</label>
+            <input type="text" id="input-title" value="Arroz Agulhinha T1 5kg" oninput="updatePoster()">
         </div>
 
-        <!-- FORMULÁRIO EM MODO LISTA -->
-        <div id="form-lista" style="display: none;">
-            <div class="group">
-                <label>Insira os produtos (1 por linha)</label>
-                <p style="font-size: 11px; color: #a2a2c2; margin-top: -3px; margin-bottom: 5px;">Padrão: Nome | Preço Inteiro | Centavos | Unidade</p>
-                <textarea id="textarea-produtos" placeholder="Exemplo:&#10;COXÃO MOLE BOVINO KG|35|90|KG&#10;ARROZ INTEGRAL 5KG|24|50|UN&#10;FEIJÃO CARIOCA 1KG|07|89|PCT"></textarea>
-            </div>
+        <div class="form-group">
+            <label for="input-desc">Detalhes / Subtítulo</label>
+            <input type="text" id="input-desc" value="Limite de 3 unidades por cliente" oninput="updatePoster()">
         </div>
 
-        <div class="group">
-            <label>Texto do Rodapé</label>
-            <input type="text" id="input-rodape" value="IC ART'S">
+        <div class="form-group">
+            <label for="input-price">Preço Inteiro</label>
+            <input type="number" id="input-price" value="24" oninput="updatePoster()">
         </div>
 
-        <button class="btn-print" onclick="window.print()">Imprimir Cartazes</button>
+        <div class="form-group">
+            <label for="input-cents">Centavos</label>
+            <input type="text" id="input-cents" value="98" maxlength="2" oninput="updatePoster()">
+        </div>
+
+        <button class="btn-print" onclick="window.print()">Imprimir Cartaz</button>
     </div>
 
-    <!-- ÁREA DE PREVISÃO DA FOLHA -->
-    <div class="main-content">
-        <div class="print-zone" id="print-zone-container">
-            <!-- Renderização dinâmica aqui -->
+    <!-- Área de Visualização do Resultado -->
+    <div class="preview-area">
+        <div id="poster" class="poster-canvas size-a4">
+            <div id="view-badge" class="poster-header">Oferta</div>
+            
+            <div class="poster-body">
+                <div id="view-title" class="product-title">Arroz Agulhinha T1 5kg</div>
+                <div id="view-desc" class="product-desc">Limite de 3 unidades por cliente</div>
+            </div>
+            
+            <div class="poster-footer">
+                <div class="price-container">
+                    <span class="currency">R$</span>
+                    <span id="view-price" class="price-main">24</span>
+                    <span id="view-cents" class="price-cents">,98</span>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- SCRIPT LOGICO (100% OFFLINE) -->
     <script>
-        const selectTema = document.getElementById('select-tema');
-        const selectFormato = document.getElementById('select-formato');
-        const selectModo = document.getElementById('select-modo');
-        const inputTitulo = document.getElementById('input-titulo');
-        const inputInteiro = document.getElementById('input-inteiro');
-        const inputCentavos = document.getElementById('input-centavos');
-        const inputUnidade = document.getElementById('input-unidade');
-        const textareaProdutos = document.getElementById('textarea-produtos');
-        const inputRodape = document.getElementById('input-rodape');
-        const printZoneContainer = document.getElementById('print-zone-container');
+        // Função que atualiza o layout em tempo real conforme o usuário digita
+        function updatePoster() {
+            // Inputs
+            const theme = document.getElementById('input-theme').value;
+            const size = document.getElementById('input-size').value;
+            const badge = document.getElementById('input-badge').value;
+            const title = document.getElementById('input-title').value;
+            const desc = document.getElementById('input-desc').value;
+            const price = document.getElementById('input-price').value;
+            const cents = document.getElementById('input-cents').value;
 
-        function alternarModo() {
-            if (selectModo.value === "unico") {
-                document.getElementById('form-unico').style.display = "block";
-                document.getElementById('form-lista').style.display = "none";
-            } else {
-                document.getElementById('form-unico').style.display = "block"; // Deixa visível para complementar se faltar dados
-                document.getElementById('form-lista').style.display = "block";
-            }
-            gerarCartazes();
+            // Elementos de Visualização
+            const poster = document.getElementById('poster');
+            
+            // Atualiza tamanho e classes de tema do elemento pai
+            poster.className = 'poster-canvas ' + size + ' ' + (theme !== 'default' ? theme : '');
+
+            // Atualiza os textos
+            document.getElementById('view-badge').innerText = badge;
+            document.getElementById('view-title').innerText = title;
+            document.getElementById('view-desc').innerText = desc;
+            document.getElementById('view-price').innerText = price;
+            document.getElementById('view-cents').innerText = ',' + cents;
         }
 
-        // Gera a estrutura HTML padrão de um bloco de cartaz
-        function obterEstruturaCartaz(titulo, inteiro, centavos, unidade, rodape, classeTema) {
-            let textoTopo = "OFERTA";
-            if(classeTema === "tema-confira") textoTopo = "CONFIRA";
-            if(classeTema === "tema-promocao-vermelho") textoTopo = "PROMOÇÃO";
-            if(classeTema === "tema-hortifruti-verde") textoTopo = "HORTIFRUTI";
-            if(classeTema === "tema-limpeza-azul-ceu") textoTopo = "LIMPEZA";
-
-            return `
-                <div class="cartaz-container ${classeTema}">
-                    <div class="faixa-topo">
-                        <div class="badge-topo">${textoTopo}</div>
-                    </div>
-                    
-                    <div class="metade-descricao">
-                        <div class="product-title">${titulo.toUpperCase()}</div>
-                    </div>
-                    
-                    <div class="metade-preco">
-                        <div class="price-main">
-                            <span class="inteiro">${inteiro}</span>
-                            <div class="centavos-box">
-                                <span class="centavos">${centavos}</span>
-                            </div>
-                        </div>
-                        <div class="unidade-medida">${unidade.toUpperCase()}</div>
-                    </div>
-                    
-                    <div class="faixa-rodape">
-                        <div class="texto-rodape">${rodape.toUpperCase()}</div>
-                    </div>
-                </div>
-            `;
-        }
-
-        function gerarCartazes() {
-            printZoneContainer.innerHTML = "";
-            const formato = selectFormato.value;
-            const tema = selectTema.value;
-            const rodape = inputRodape.value;
-
-            // 1. Extração dos dados baseada no modo selecionado
-            let listaProdutos = [];
-
-            if (selectModo.value === "unico") {
-                listaProdutos.push({
-                    titulo: inputTitulo.value,
-                    inteiro: inputInteiro.value,
-                    centavos: inputCentavos.value,
-                    unidade: inputUnidade.value
-                });
-            } else {
-                const linhas = textareaProdutos.value.split('\n');
-                linhas.forEach(linha => {
-                    if (linha.trim() !== "") {
-                        const dados = linha.split('|');
-                        listaProdutos.push({
-                            titulo: dados[0] ? dados[0].trim() : "PRODUTO",
-                            inteiro: dados[1] ? dados[1].trim() : "00",
-                            centavos: dados[2] ? dados[2].trim() : "00",
-                            unidade: dados[3] ? dados[3].trim() : "UN"
-                        });
-                    }
-                });
-            }
-
-            // 2. Distribuição nos novos formatos e grids organizados
-            if (formato === "A4-retrato" || formato === "A4-paisagem") {
-                // Renderiza um cartaz por folha inteira
-                listaProdutos.forEach(p => {
-                    const blocoHtml = obterEstruturaCartaz(p.titulo, p.inteiro, p.centavos, p.unidade, rodape, tema);
-                    printZoneContainer.innerHTML += `<div class="paper-preview ${formato}">${blocoHtml}</div>`;
-                });
-            } 
-            else if (formato === "GRID-2") {
-                // Corta e monta de 2 em 2 cartazes por folha física
-                for (let i = 0; i < listaProdutos.length; i += 2) {
-                    let cartazesDaFolhaHtml = "";
-                    
-                    // Primeiro item do par
-                    cartazesDaFolhaHtml += obterEstruturaCartaz(listaProdutos[i].titulo, listaProdutos[i].inteiro, listaProdutos[i].centavos, listaProdutos[i].unidade, rodape, tema);
-                    
-                    // Segundo item do par (se houver, senão gera um espelho vazio estrutural)
-                    if (listaProdutos[i+1]) {
-                        cartazesDaFolhaHtml += obterEstruturaCartaz(listaProdutos[i+1].titulo, listaProdutos[i+1].inteiro, listaProdutos[i+1].centavos, listaProdutos[i+1].unidade, rodape, tema);
-                    } else {
-                        cartazesDaFolhaHtml += obterEstruturaCartaz(listaProdutos[i].titulo, listaProdutos[i].inteiro, listaProdutos[i].centavos, listaProdutos[i].unidade, rodape, tema);
-                    }
-
-                    printZoneContainer.innerHTML += `<div class="grid-2-folha">${cartazesDaFolhaHtml}</div>`;
-                }
-            } 
-            else if (formato === "GRID-4") {
-                // Corta e monta de 4 em 4 cartazes pequenos por folha física
-                for (let i = 0; i < listaProdutos.length; i += 4) {
-                    let cartazesDaFolhaHtml = "";
-                    for (let j = 0; j < 4; j++) {
-                        const indiceAtual = i + j;
-                        if (listaProdutos[indiceAtual]) {
-                            cartazesDaFolhaHtml += obterEstruturaCartaz(listaProdutos[indiceAtual].titulo, listaProdutos[indiceAtual].inteiro, listaProdutos[indiceAtual].centavos, listaProdutos[indiceAtual].unidade, rodape, tema);
-                        } else {
-                            // Preenche os quadrantes que sobrarem vazios com réplicas do primeiro para manter estabilidade visual
-                            cartazesDaFolhaHtml += obterEstruturaCartaz(listaProdutos[i].titulo, listaProdutos[i].inteiro, listaProdutos[i].centavos, listaProdutos[i].unidade, rodape, tema);
-                        }
-                    }
-                    printZoneContainer.innerHTML += `<div class="grid-4-folha">${cartazesDaFolhaHtml}</div>`;
-                }
-            }
-        }
-
-        // Ouvintes de atualização em tempo real
-        selectTema.addEventListener('change', gerarCartazes);
-        selectFormato.addEventListener('change', gerarCartazes);
-        inputTitulo.addEventListener('input', gerarCartazes);
-        inputInteiro.addEventListener('input', gerarCartazes);
-        inpu
+        // Inicializa o cartaz com os valores padrões no carregamento
+        updatePoster();
+    </script>
+</body>
+</html>
