@@ -54,10 +54,10 @@
             box-sizing: border-box; 
             position: relative; 
             overflow: hidden;
-            border: 5px solid currentColor; /* Borda fina acompanhando a cor do tema */
+            border: 5px solid currentColor;
         }
         
-        /* FAIXA DO TOPO ONDULADA (ESTILO VAREJO PROFISSIONAL) */
+        /* FAIXA DO TOPO ONDULADA */
         .faixa-topo {
             width: 100%;
             height: 18%;
@@ -86,7 +86,6 @@
             justify-content: space-around;
             align-items: center;
             padding: 10px 20px;
-            /* Simulação do efeito mancha/pincelado amarelo do fundo do cartaz */
             background: radial-gradient(circle, #ffe600 60%, #ffffff 100%);
         }
 
@@ -113,7 +112,7 @@
             overflow: hidden;
         }
         
-        /* SEÇÃO DE PREÇOS IGUAL AO PRINT */
+        /* SEÇÃO DE PREÇOS */
         .price-section { 
             display: flex; 
             flex-direction: column; 
@@ -130,7 +129,7 @@
         
         .clube-tag { position: absolute; bottom: 25%; right: 10px; background-color: #000; color: #fff; padding: 5px 8px; font-weight: 900; border-radius: 4px; font-size: 12px; text-transform: uppercase; display: none; transform: rotate(-5deg); }
 
-        /* FAIXA DO RODAPÉ (IC ARTES) */
+        /* FAIXA DO RODAPÉ */
         .faixa-rodape {
             width: 100%;
             height: 10%;
@@ -164,7 +163,6 @@
         .grid-4 .texto-rodape { font-size: 10px; }
         .grid-4 .faixa-rodape { height: 9%; padding-top: 4px; }
 
-        /* IMPRESSÃO DE ALTA QUALIDADE */
         @media print {
             body { background: #fff; color: #000; display: block; height: auto; overflow: visible; }
             .sidebar { display: none !important; }
@@ -301,7 +299,6 @@
             let quantidadeCartazes = (boxSize === 'grid-4') ? 4 : 1;
             let cartazesHTML = '';
 
-            // Alternar visibilidade dos formulários no painel esquerdo
             if(boxSize === 'grid-4') {
                 document.getElementById('panelFormUnico').style.display = "none";
                 document.getElementById('panelFormLista').style.display = "block";
@@ -313,18 +310,14 @@
             for(let i = 1; i <= quantidadeCartazes; i++) {
                 cartazesHTML += `
                     <div class="cartaz-container" id="cartazRef_${i}">
-                        <!-- FAIXA SUPERIOR -->
                         <div class="faixa-topo">
                             <div class="badge-topo">OFERTA</div>
                         </div>
-                        
-                        <!-- MIOLO COM FUNDO GRADIENTE AMARELO -->
                         <div class="conteudo-principal">
                             <div class="product-image-top">
-                                <img src="${imagemBase64}" alt="Produto">
+                                <img src="${imagemBase64}" alt="Produto" class="cartaz-img-tag">
                             </div>
                             <div class="product-title" id="outTitulo_${i}">NOME DO PRODUTO</div>
-                            
                             <div class="price-section">
                                 <div class="price-old" id="outDe_${i}">De: R$ <span></span></div>
                                 <div class="price-main">
@@ -336,8 +329,6 @@
                             </div>
                             <div class="clube-tag" id="outClube_${i}"></div>
                         </div>
-
-                        <!-- FAIXA DO RODAPÉ ATUALIZADA -->
                         <div class="faixa-rodape">
                             <div class="texto-rodape">IC ARTES comunicação visual * cartazes *</div>
                         </div>
@@ -353,7 +344,6 @@
             const boxSize = document.getElementById('boxSize').value;
 
             if(boxSize !== 'grid-4') {
-                // Sincronização padrão para cartaz único
                 const titulo = document.getElementById('inTitulo').value;
                 const precoDe = document.getElementById('inDe').value;
                 const clube = document.getElementById('inClube').value;
@@ -361,33 +351,38 @@
                 const centavos = document.getElementById('inCentavos').value;
                 const unidade = document.getElementById('inUnidade').value;
 
-                document.getElementById('outTitulo_1').innerText = titulo;
-                document.getElementById('outInt_1').innerText = inteiro;
-                document.getElementById('outCent_1').innerText = centavos ? ',' + centavos : ',00';
-                document.getElementById('outUnidade_1').innerText = unidade;
+                if(document.getElementById('outTitulo_1')) document.getElementById('outTitulo_1').innerText = titulo;
+                if(document.getElementById('outInt_1')) document.getElementById('outInt_1').innerText = inteiro;
+                if(document.getElementById('outCent_1')) document.getElementById('outCent_1').innerText = centavos ? ',' + centavos : ',00';
+                if(document.getElementById('outUnidade_1')) document.getElementById('outUnidade_1').innerText = unidade;
 
                 let elDe = document.getElementById('outDe_1');
-                if(precoDe.trim() !== "") {
-                    elDe.style.display = "block";
-                    elDe.querySelector('span').innerText = precoDe;
-                } else {
-                    elDe.style.display = "none";
+                if(elDe) {
+                    if(precoDe.trim() !== "") {
+                        elDe.style.display = "block";
+                        elDe.querySelector('span').innerText = precoDe;
+                    } else {
+                        elDe.style.display = "none";
+                    }
                 }
 
                 let elClube = document.getElementById('outClube_1');
-                if(clube.trim() !== "") {
-                    elClube.style.display = "block";
-                    elClube.innerText = clube;
-                } else {
-                    elClube.style.display = "none";
+                if(elClube) {
+                    if(clube.trim() !== "") {
+                        elClube.style.display = "block";
+                        elClube.innerText = clube;
+                    } else {
+                        elClube.style.display = "none";
+                    }
                 }
             } else {
-                // Sincronização da lista de 4 produtos diferentes para o modo grid
                 for(let i = 1; i <= 4; i++) {
-                    let titulo = document.getElementById('lProd_' + i)? document.getElementById('lProd_' + i).value : document.getElementById(`lProd${i}`).value;
+                    let titulo = document.getElementById(`lProd${i}`).value;
                     let inteiro = document.getElementById(`lInt${i}`).value;
                     let centavos = document.getElementById(`lCent${i}`).value;
 
-                    document.getElementById(`outTitulo_${i}`).innerText = titulo;
-                    document.getElementById(`outInt_${i}`).innerText = inteiro;
-                    document.getElementById(`outCent_${i}`
+                    if(document.getElementById(`outTitulo_${i}`)) document.getElementById(`outTitulo_${i}`).innerText = titulo;
+                    if(document.getElementById(`outInt_${i}`)) document.getElementById(`outInt_${i}`).innerText = inteiro;
+                    if(document.getElementById(`outCent_${i}`)) document.getElementById(`outCent_${i}`).innerText = centavos ? ',' + centavos : ',00';
+                    if(document.getElementById(`outUnidade_${i}`)) document.getElementById(`outUnidade_${i}`).innerText = "UNIDADE"; 
+                    if(document.getElementById(`outDe_${i}`)) document.getElementById(`outDe_${i}`).styl
