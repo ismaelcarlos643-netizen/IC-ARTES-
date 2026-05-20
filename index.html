@@ -6,8 +6,7 @@
     <title>Gerador de Cartazes Ultra Impacto - IC ART'S</title>
     <link rel="preconnect" href="https://googleapis.com">
     <link rel="preconnect" href="https://gstatic.com" crossorigin>
-    <!-- Importando fontes com o maior peso e densidade possíveis -->
-    <link href="https://googleapis.com/css2?family=Archivo+Black&family=Impact&display=swap" rel="stylesheet">
+    <link href="https://googleapis.com" rel="stylesheet">
     
     <style>
         :root {
@@ -23,7 +22,6 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            /* Força a fonte mais grossa existente por padrão em todos os textos */
             font-family: 'Archivo Black', 'Arial Black', sans-serif;
             font-weight: 900;
         }
@@ -58,31 +56,6 @@
             letter-spacing: 1px;
         }
 
-        .tabs {
-            display: flex;
-            gap: 5px;
-            background: #334155;
-            padding: 4px;
-            border-radius: 6px;
-        }
-
-        .tab-btn {
-            flex: 1;
-            background: transparent;
-            border: none;
-            color: #94a3b8;
-            padding: 8px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            border-radius: 4px;
-            font-weight: bold;
-        }
-
-        .tab-btn.active {
-            background: #2563eb;
-            color: white;
-        }
-
         .form-group {
             display: flex;
             flex-direction: column;
@@ -106,7 +79,7 @@
         }
 
         .form-group textarea {
-            height: 80px;
+            height: 60px;
             resize: none;
         }
 
@@ -150,14 +123,34 @@
             overflow: hidden;
             box-shadow: 0 20px 40px rgba(0,0,0,0.5);
             box-sizing: border-box;
+            transition: all 0.3s ease;
         }
 
-        /* TAMANHOS DE SELEÇÃO */
-        .size-20x27 { width: 567px; height: 766px; } 
-        .size-meia { width: 595px; height: 421px; }  
-        .size-quatro { width: 297px; height: 421px; } 
+        /* NOVOS TAMANHOS ADICIONADOS (Proporções exatas baseadas em pixels) */
+        .size-a4-paisagem { width: 756px; height: 535px; } 
+        .size-meia-a4 { width: 378px; height: 535px; }  
+        .size-quatro-a4 { width: 268px; height: 378px; } 
 
-        /* Topo em Onda Curva - Texto Gigante Extra-Bold */
+        /* Customização dinâmica para formatos horizontais */
+        .size-a4-paisagem .poster-header-wave { height: 25%; font-size: 4.5rem; }
+        .size-a4-paisagem .price-main { font-size: 14rem; }
+        .size-a4-paisagem .price-cents { font-size: 6.5rem; }
+        .size-a4-paisagem .price-comma { font-size: 6.5rem; }
+
+        /* Customização dinâmica para formatos reduzidos */
+        .size-meia-a4 .poster-header-wave { font-size: 3.5rem; }
+        .size-meia-a4 .product-title { font-size: 2.2rem; }
+        .size-meia-a4 .product-unit { font-size: 1.3rem; }
+        .size-meia-a4 .price-main { font-size: 11rem; letter-spacing: -6px; }
+        .size-meia-a4 .price-cents, .size-meia-a4 .price-comma { font-size: 5rem; }
+
+        .size-quatro-a4 .poster-header-wave { font-size: 2.5rem; }
+        .size-quatro-a4 .product-title { font-size: 1.6rem; }
+        .size-quatro-a4 .product-unit { font-size: 1rem; }
+        .size-quatro-a4 .price-main { font-size: 8rem; letter-spacing: -4px; }
+        .size-quatro-a4 .price-cents, .size-quatro-a4 .price-comma { font-size: 3.5rem; }
+
+        /* Topo em Onda Curva */
         .poster-header-wave {
             width: 130%;
             height: 20%;
@@ -166,13 +159,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 5.5rem; /* Fonte ampliada ao máximo */
+            font-size: 5.5rem;
             text-transform: uppercase;
             border-bottom-left-radius: 50% 45%;
             border-bottom-right-radius: 50% 45%;
             margin-top: -5px;
-            padding-bottom: 20px;
-            letter-spacing: -2px; /* Letras coladas para maior agressividade visual */
+            padding-bottom: 15px;
+            letter-spacing: -2px;
             text-shadow: 3px 3px 0px #000;
         }
 
@@ -186,12 +179,11 @@
             justify-content: space-between;
             text-align: center;
             z-index: 2;
-            padding: 15px 10px;
+            padding: 10px;
         }
 
-        /* Título expandido ao limite da largura */
         .product-title {
-            font-size: 3.4rem;
+            font-size: 3.2rem;
             color: #000000;
             text-transform: uppercase;
             line-height: 0.85;
@@ -205,7 +197,7 @@
         }
 
         .product-unit {
-            font-size: 2rem;
+            font-size: 1.8rem;
             color: #111111;
             text-transform: uppercase;
             line-height: 0.9;
@@ -216,7 +208,7 @@
         .price-wrapper {
             position: relative;
             width: 95%;
-            height: 48%;
+            height: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -236,102 +228,79 @@
             position: relative;
             z-index: 2;
             display: flex;
-            align-items: flex-start;
+            align-items: flex-end; /* Alinha todos os elementos pela base inferior */
             justify-content: center;
-            /* Fonte ultra-adensada e compacta para preencher toda a área vertical */
             font-family: 'Impact', 'Arial Black', sans-serif;
             color: var(--theme-price);
             width: 100%;
         }
 
-        /* Números Gigantes Colados */
         .price-main {
             font-size: 16.5rem; 
-            line-height: 0.65;
+            line-height: 0.75;
             letter-spacing: -12px;
             font-weight: 900;
         }
 
+        /* Nova estrutura para alinhar a vírgula embaixo perto do número grande */
         .price-right-box {
             display: flex;
-            flex-direction: column;
-            align-items: flex-start;
+            flex-direction: row-reverse; /* Inverte para a vírgula ficar antes dos centavos na base */
+            align-items: flex-end;
             margin-left: -5px;
-            margin-top: -15px;
         }
 
         .price-comma {
             font-size: 7.5rem;
-            line-height: 0.3;
-            margin-bottom: -15px;
+            line-height: 0.75;
             font-weight: 900;
+            margin-right: -2px; /* Cola a vírgula nos centavos */
         }
 
         .price-cents {
             font-size: 7.5rem;
-            line-height: 0.65;
+            line-height: 0.75;
             font-weight: 900;
             letter-spacing: -4px;
+            margin-bottom: 2.5rem; /* Eleva os centavos mantendo a vírgula no chão */
         }
 
+        /* Ajustes específicos de elevação dos centavos por tamanho */
+        .size-a4-paisagem .price-cents { margin-bottom: 2rem; }
+        .size-meia-a4 .price-cents { margin-bottom: 1.5rem; }
+        .size-quatro-a4 .price-cents { margin-bottom: 1rem; }
+
         .price-footer-unit {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             color: #000000;
             text-transform: uppercase;
             z-index: 3;
-            margin-top: -10px;
+            margin-top: -5px;
             background: var(--theme-brush);
-            padding: 4px 14px;
+            padding: 2px 12px;
             border: 2px solid #000;
             border-radius: 4px;
         }
 
-        /* Base em Onda Invertida - Texto esticado ao limite */
         .poster-footer-wave {
             width: 130%;
-            height: 14%;
+            height: 10%;
             background: var(--theme-header-bg);
-            color: #ffffff;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            text-transform: uppercase;
-            border-top-left-radius: 50% 45%;
-            border-top-right-radius: 50% 45%;
+            border-top-left-radius: 50% 35%;
+            border-top-right-radius: 50% 35%;
             margin-bottom: -5px;
-            padding-top: 20px;
-            letter-spacing: 0px;
-            text-align: center;
         }
 
-        /* Configuração de Impressão */
         @media print {
-            body * {
-                visibility: hidden;
-            }
-            .preview-area, .preview-area *, .poster-container, .poster-container * {
-                visibility: visible;
-            }
-            .control-panel {
-                display: none;
-            }
+            body * { visibility: hidden; }
+            .preview-area, .preview-area *, .poster-container, .poster-container * { visibility: visible; }
+            body { background: #fff; }
+            .control-panel { display: none; }
             .preview-area {
-                position: absolute;
-                left: 0;
-                top: 0;
-                width: 100%;
-                height: 100%;
-                padding: 0;
-                background: white;
-                display: flex;
-                align-items: center;
-                justify-content: center;
+                position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+                padding: 0; margin: 0; display: flex; align-items: center; justify-content: center; background: white;
             }
-            .poster-container {
-                box-shadow: none;
-                page-break-inside: avoid;
-            }
+            .poster-container { box-shadow: none; page-break-inside: avoid; }
         }
     </style>
 </head>
@@ -339,138 +308,154 @@
 
     <!-- Painel Lateral de Controle -->
     <div class="control-panel">
-        <h2>IC ART'S Ultra Bold</h2>
+        <h2>IC ART'S - Gerador</h2>
         
-        <div class="tabs">
-            <button class="tab-btn active" onclick="switchTab('conteudo')">Conteúdo</button>
-            <button class="tab-btn" onclick="switchTab('temas')">Cores</button>
+        <div class="form-group">
+            <label for="select-size">Tamanho do Cartaz</label>
+            <select id="select-size" onchange="changeSize()">
+                <option value="size-a4-paisagem">A4 Paisagem (29,7 x 21 cm)</option>
+                <option value="size-meia-a4">Meia Folha A4 / A5 (14,8 x 21 cm)</option>
+                <option value="size-quatro-a4">1/4 de Folha A4 / A6 (10,5 x 14,8 cm)</option>
+            </select>
         </div>
 
-        <!-- Conteúdo da Aba Dados -->
-        <div id="tab-conteudo" class="tab-content">
-            <div class="form-group" style="margin-bottom: 12px;">
-                <label>Tamanho do Cartaz</label>
-                <select id="input-size" onchange="updateSize()">
-                    <option value="size-20x27">Padrão 20x27 cm</option>
-                    <option value="size-meia">Meia Folha (A5)</option>
-                    <option value="size-quatro">Quatro por Folha (A6)</option>
-                </select>
-            </div>
-            <div class="form-group" style="margin-bottom: 12px;">
-                <label>Texto do Topo</label>
-                <input type="text" id="input-header" value="OFERTA" oninput="updateText()">
-            </div>
-            <div class="form-group" style="margin-bottom: 12px;">
-                <label>Nome do Produto</label>
-                <textarea id="input-title" oninput="updateText()">SABÃO EM PÓ OMO LAVE ROSAS</textarea>
-            </div>
-            <div class="form-group" style="margin-bottom: 12px;">
-                <label>Detalhe da Embalagem</label>
-                <input type="text" id="input-unit" value="CAIXA 1.6KG" oninput="updateText()">
-            </div>
-            <div class="form-group" style="margin-bottom: 12px;">
-                <label>Preço Inteiro</label>
-                <input type="text" id="input-price-main" value="19" oninput="updateText()">
-            </div>
-            <div class="form-group" style="margin-bottom: 12px;">
-                <label>Centavos</label>
-                <input type="text" id="input-price-cents" value="98" oninput="updateText()">
-            </div>
-            <div class="form-group" style="margin-bottom: 12px;">
-                <label>Unidade de Medida Base</label>
-                <input type="text" id="input-footer-unit" value="NESTA EMBALAGEM O KG SAI A R$ 12,48" oninput="updateText()">
-            </div>
-            <div class="form-group">
-                <label>Texto do Rodapé</label>
-                <input type="text" id="input-footer" value="VÁLIDO ENQUANTO DURAREM OS ESTOQUES" oninput="updateText()">
-            </div>
+        <div class="form-group">
+            <label for="input-header">Texto do Topo (Oferta)</label>
+            <input type="text" id="input-header" value="OFERTA" oninput="updatePoster()">
         </div>
 
-        <!-- Conteúdo da Aba Temas -->
-        <div id="tab-temas" class="tab-content" style="display: none;">
-            <div class="form-group" style="margin-bottom: 12px;">
-                <label>Cor das Ondas (Topo/Base)</label>
-                <input type="color" id="color-header-bg" value="#cc0000" onchange="updateColors()">
-            </div>
-            <div class="form-group" style="margin-bottom: 12px;">
-                <label>Cor do Texto do Topo</label>
-                <input type="color" id="color-header-text" value="#ffcc00" onchange="updateColors()">
-            </div>
-            <div class="form-group" style="margin-bottom: 12px;">
-                <label>Cor do Fundo Pincelado</label>
-                <input type="color" id="color-brush" value="#ffcc00" onchange="updateColors()">
-            </div>
-            <div class="form-group">
-                <label>Cor do Preço</label>
-                <input type="color" id="color-price" value="#cc0000" onchange="updateColors()">
-            </div>
+        <div class="form-group">
+            <label for="input-title">Nome do Produto</label>
+            <textarea id="input-title" oninput="updatePoster()">SABÃO EM PÓ OMO GIGANTE</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="input-unit">Subtítulo / Detalhe</label>
+            <input type="text" id="input-unit" value="LAVAGEM PERFEITA 1.6KG" oninput="updatePoster()">
+        </div>
+
+        <div class="form-group">
+            <label for="input-price">Preço (Ex: 19,98)</label>
+            <input type="text" id="input-price" value="19,98" oninput="updatePoster()">
+        </div>
+
+        <div class="form-group">
+            <label for="input-footer-unit">Unidade de Medida</label>
+            <input type="text" id="input-footer-unit" value="CADA" oninput="updatePoster()">
+        </div>
+
+        <div class="form-group">
+            <label for="select-theme">Tema de Cores</label>
+            <select id="select-theme" onchange="updateTheme()">
+                <option value="red-yellow">Vermelho e Amarelo (Supermercado)</option>
+                <option value="black-yellow">Preto e Amarelo (Especial)</option>
+                <option value="blue-white">Azul e Branco (Farmácia)</option>
+                <option value="green-yellow">Verde e Amarelo (Hortifrúti)</option>
+            </select>
         </div>
 
         <button class="btn-print" onclick="window.print()">Imprimir Cartaz</button>
     </div>
 
-    <!-- Área de Visualização do Cartaz -->
+    <!-- Área de Visualização -->
     <div class="preview-area">
-        <div id="poster" class="poster-container size-20x27">
-            
-            <div id="view-header" class="poster-header-wave">OFERTA</div>
+        <div id="poster" class="poster-container size-a4-paisagem">
+            <div class="poster-header-wave" id="poster-header">OFERTA</div>
             
             <div class="poster-body">
-                <div id="view-title" class="product-title">SABÃO EM PÓ OMO LAVE ROSAS</div>
-                <div id="view-unit" class="product-unit">CAIXA 1.6KG</div>
-                
+                <div style="width: 100%;">
+                    <div class="product-title" id="poster-title">SABÃO EM PÓ OMO GIGANTE</div>
+                    <div class="product-unit" id="poster-unit">LAVAGEM PERFEITA 1.6KG</div>
+                </div>
+
                 <div class="price-wrapper">
                     <div class="brush-bg"></div>
                     <div class="price-container">
-                        <span id="view-price-main" class="price-main">19</span>
+                        <span class="price-main" id="price-main">19</span>
                         <div class="price-right-box">
+                            <span class="price-cents" id="price-cents">98</span>
                             <span class="price-comma">,</span>
-                            <span id="view-price-cents" class="price-cents">98</span>
                         </div>
                     </div>
                 </div>
-                
-                <div id="view-footer-unit" class="price-footer-unit">NESTA EMBALAGEM O KG SAI A R$ 12,48</div>
+
+                <div class="price-footer-unit" id="poster-footer-unit">CADA</div>
             </div>
-            
-            <div id="view-footer" class="poster-footer-wave">VÁLIDO ENQUANTO DURAREM OS ESTOQUES</div>
+
+            <div class="poster-footer-wave"></div>
         </div>
     </div>
 
-    <!-- Scripts de Controle de Estado -->
     <script>
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.style.display = 'none');
+        function updatePoster() {
+            const headerText = document.getElementById('input-header').value;
+            const titleText = document.getElementById('input-title').value;
+            const unitText = document.getElementById('input-unit').value;
+            const priceText = document.getElementById('input-price').value;
+            const footerUnitText = document.getElementById('input-footer-unit').value;
+
+            let mainPrice = "0";
+            let centsPrice = "00";
             
-            event.target.classList.add('active');
-            document.getElementById('tab-' + tabName).style.display = 'block';
+            if (priceText.includes(',')) {
+                const parts = priceText.split(',');
+                mainPrice = parts[0] || "0";
+                centsPrice = parts[1] || "00";
+            } else if (priceText.includes('.')) {
+                const parts = priceText.split('.');
+                mainPrice = parts[0] || "0";
+                centsPrice = parts[1] || "00";
+            } else {
+                mainPrice = priceText || "0";
+            }
+
+            if (centsPrice.length === 1) centsPrice += "0";
+
+            document.getElementById('poster-header').innerText = headerText;
+            document.getElementById('poster-title').innerText = titleText;
+            document.getElementById('poster-unit').innerText = unitText;
+            document.getElementById('price-main').innerText = mainPrice;
+            document.getElementById('price-cents').innerText = centsPrice.substring(0, 2);
+            document.getElementById('poster-footer-unit').innerText = footerUnitText;
         }
 
-        function updateText() {
-            document.getElementById('view-header').innerText = document.getElementById('input-header').value;
-            document.getElementById('view-title').innerText = document.getElementById('input-title').value;
-            document.getElementById('view-unit').innerText = document.getElementById('input-unit').value;
-            document.getElementById('view-price-main').innerText = document.getElementById('input-price-main').value;
-            document.getElementById('view-price-cents').innerText = document.getElementById('input-price-cents').value;
-            document.getElementById('view-footer-unit').innerText = document.getElementById('input-footer-unit').value;
-            document.getElementById('view-footer').innerText = document.getElementById('input-footer').value;
-        }
-
-        function updateSize() {
+        function changeSize() {
+            const select = document.getElementById('select-size');
             const poster = document.getElementById('poster');
-            const selectedSize = document.getElementById('input-size').value;
             
-            poster.className = 'poster-container ' + selectedSize;
+            poster.classList.remove('size-a4-paisagem', 'size-meia-a4', 'size-quatro-a4');
+            poster.classList.add(select.value);
         }
 
-        function updateColors() {
+        function updateTheme() {
+            const theme = document.getElementById('select-theme').value;
             const root = document.documentElement;
-            root.style.setProperty('--theme-header-bg', document.getElementById('color-header-bg').value);
-            root.style.setProperty('--theme-header-text', document.getElementById('color-header-text').value);
-            root.style.setProperty('--theme-brush', document.getElementById('color-brush').value);
-            root.style.setProperty('--theme-price', document.getElementById('color-price').value);
+
+            if (theme === 'red-yellow') {
+                root.style.setProperty('--theme-header-bg', '#cc0000');
+                root.style.setProperty('--theme-header-text', '#ffcc00');
+                root.style.setProperty('--theme-price', '#cc0000');
+                root.style.setProperty('--theme-brush', '#ffcc00');
+            } else if (theme === 'black-yellow') {
+                root.style.setProperty('--theme-header-bg', '#111111');
+                root.style.setProperty('--theme-header-text', '#ffcc00');
+                root.style.setProperty('--theme-price', '#111111');
+                root.style.setProperty('--theme-brush', '#ffcc00');
+            } else if (theme === 'blue-white') {
+                root.style.setProperty('--theme-header-bg', '#1e40af');
+                root.style.setProperty('--theme-header-text', '#ffffff');
+                root.style.setProperty('--theme-price', '#1e40af');
+                root.style.setProperty('--theme-brush', '#f1f5f9');
+            } else if (theme === 'green-yellow') {
+                root.style.setProperty('--theme-header-bg', '#15803d');
+                root.style.setProperty('--theme-header-text', '#ffffff');
+                root.style.setProperty('--theme-price', '#166534');
+                root.style.setProperty('--theme-brush', '#fef08a');
+            }
         }
+
+        updatePoster();
     </script>
 </body>
-</html>
+            </html>
+            
